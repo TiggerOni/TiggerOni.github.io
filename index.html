@@ -59,7 +59,7 @@
 	const legendItemHeight = 50;
 
 	var showingMap = true;
-	var showingHelp = false;
+	var showingHelp = true;
 	var showingCredits = false;
 	
 	var bgImg;
@@ -375,14 +375,14 @@
 		canvasContext.fillStyle = "gray";	
 		canvasContext.fillRect(panelX, panelY, panelWidth, panelHeight);
 	
-		canvasContext.font = "30px Verdana Bold";
+		canvasContext.font = "24px Verdana Bold";
 		canvasContext.fillStyle = "white";
 		canvasContext.textAlign = "left";
 		
 		var x = panelX + 40;
 		var y = panelY + 80;
 		
-		for (var i=0; i<text.length; i++, y+=40) {
+		for (var i=0; i<text.length; i++, y+=36) {
 			canvasContext.fillText(text[i], x, y);
 		}
 	}

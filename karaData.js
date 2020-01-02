@@ -372,7 +372,8 @@ var helpText = [
 	"\'b\' toggles all the breads.",
 	"\'f\' toggles all the fruits.",
 	"",
-	"Most browsers support Shift + scrollwheel to zoom in and out.",
+	"Most browsers support Ctrl + scrollwheel to zoom in and out.",
+	"Ctrl + and Ctrl - allows zooming also.",
 	"",
 	"Any key press closes this help."
 ];
