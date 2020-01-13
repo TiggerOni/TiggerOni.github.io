@@ -8,7 +8,7 @@
 var shapeWidth = 36;
 var shapeHeight = 36;
 
-var shapeCount = 23;
+var shapeCount = 24;
 
 const spriteSize = 36;
 
@@ -45,7 +45,7 @@ const BUNCH_BERRIES = 19;
 const PEDESTALS = 20;
 const KIBBLES = 21;
 const CRYSTALS = 22;
-
+const SKELETONS = 23;
 
 // Order of item names is the same as the ItemID list.
 var ItemNames = [
@@ -76,6 +76,7 @@ var ItemNames = [
 	"Pedestals",
 	"Kibbles",
 	"Crystals",
+	"Skeletons",
 ];
 
 var lineColors = [
@@ -86,6 +87,7 @@ var lineColors = [
 	'rgb(130, 253, 123)',		// light green
 	'rgb(255, 167, 108)',		// pale orange
 	'rgb(128, 0, 255)',			// lavender	
+	'rgb(255, 255, 255)',		// white
 ];
 
 const RGB_ERROR = 0;
@@ -95,3 +97,4 @@ const RGB_PALE_CYAN = 3;
 const RGB_PALE_GREEN = 4;
 const RGB_PALE_ORANGE = 5;
 const RGB_LAVENDER = 6;
+const RGB_WHITE = 7;

@@ -91,6 +91,8 @@ var shapes = [
 	{items:[8,9,10,11], lines:[], lineColor:RGB_PALE_GREEN, defaultActive: true, active:false, update:true},
 ];
 
+// array for UI and draw order.  We want to adjust the z order of the shapes, but not in the legend or elsewhere.
+var shapeOrder = [];
 
 // Line:
 //		[item1:, item2, crossed];
@@ -109,12 +111,12 @@ function initKaraData () {
 	// Uncomment this out if you need to test with base data.
 	// return;
 	
+	locations = [];
+	locations = KaraLocations;
 	items = [];
 	items = KaraItems;
 	shapes = [];
 	shapes = KaraShapes;
-	locations = [];
-	locations = KaraLocations;
 	
 	console.log("kara data initialized");
 }
@@ -163,6 +165,7 @@ function resetShapes() {
 	var scale;
 
 	selectedItem = null;
+	shapeOrder = [];
 	
 	for (var i=0; i<items.length; i++) {
 		items[i].currLocID = items[i].startLocID;
@@ -172,6 +175,8 @@ function resetShapes() {
 	}
 	
 	for (i=0; i<shapes.length; i++) {
+		shapeOrder[i] = i;
+		
 		shapes[i].active = shapes[i].defaultActive;
 		
 		for (var j=0; j<shapes[i].items.length; j++) {
@@ -283,6 +288,7 @@ function testLines() {
 		
 		for (var j=i+1; j<lines.length; j++) {
 			
+			// They can't collide if they share the same endpoint.
 			if (lines[i].item1 == lines[j].item1 
 				|| lines[i].item1 == lines[j].item2
 				|| lines[i].item2 == lines[j].item1
@@ -324,13 +330,26 @@ function drawItem (item) {
 }
 
 function drawShapes() {
+	
+	var dx, dy;
+	
+	canvasContext.lineWidth = 3;
+	
+	canvasContext.shadowOffsetX = 1;
+	canvasContext.shadowOffsetY = 2;
+	canvasContext.shadowBlur = 2;
+	canvasContext.shadowColor = 'black';
+	
+	
 
 	// draw lines first
 	for (var i=0; i<shapes.length; i++){
-		let shape = shapes[i];
+		let shape = shapes[shapeOrder[i]];
 				
-		canvasContext.lineWidth = 3;
-				 
+		if (!shape.active && hideInactiveItems) {
+			continue;
+		}
+	
 		if (shape.active) {
 			for (var j=0; j<shape.lines.length; j++)
 			{
@@ -356,6 +375,12 @@ function drawShapes() {
 		}
 				
 	}
+	
+	canvasContext.shadowOffsetX = 0;
+	canvasContext.shadowOffsetY = 0;
+	canvasContext.shadowBlur = 0;
+	canvasContext.shadowColor = 'black';
+
 	
 }
 
@@ -392,40 +417,50 @@ function testItemClick(x, y, shiftKey) {
 	var halfItemSize;
 	var shapeID;
 	
-	for (var i=items.length-1; i>=0; i--) {
-		var item = items[i];
-				
-		halfItemSize = (items[i].scale * spriteSize) >> 1;
-		if ( x <= item.x - halfItemSize || x >= item.x + halfItemSize
-			|| y <= item.y - halfItemSize || y >= item.y + halfItemSize)
-		{
-			continue;
-		}
+	
+	for (var i=shapeOrder.length-1; i>=0; i--) {
+		let shape = shapes[shapeOrder[i]];
 		
-		
-		if (shiftKey) {
+		for (var j=0; j<shape.items.length; j++) {
 			
-			shapeID = getItemShape(i);
-			shapes.push(shapes.splice(shapeID, 1)[0]);			
-			return;
+			let item = items[shape.items[j]];
+					
+			halfItemSize = (item.scale * spriteSize) >> 1;
+			if ( x <= item.x - halfItemSize || x >= item.x + halfItemSize
+				|| y <= item.y - halfItemSize || y >= item.y + halfItemSize)
+			{
+				continue;
+			}
+			
+			
+			if (shiftKey) {
+				shapeOrder.push(shapeOrder.splice(i, 1)[0]);				
+				return;
+			}
+			
+			if (!shape.active && !allowInactiveSwaps) {
+				continue;
+			}
+			
+			if (selectedItem == item) {
+				selectedItem = null;
+				item.scale = scaleNormal;
+			} else if (selectedItem == null) {
+				selectedItem = item;
+				item.scale = scaleSelected;
+			} else {
+				swapItems ( item, selectedItem );
+			}				
+			break;
 		}
-		
-		if (!allowInactiveSwaps && !shapes[getItemShape(i)].active) {
-			continue;
-		}
-		
-		if (selectedItem == item) {
-			selectedItem = null;
-			item.scale = scaleNormal;
-		} else if (selectedItem == null) {
-			selectedItem = item;
-			item.scale = scaleSelected;
-		} else {
-			swapItems ( item, selectedItem );
-		}				
-		break;
 	}
 }
+
+function moveShapeToFront(shapeID) {
+	var orderID = shapeOrder.findIndex(element => element == shapeID);
+	shapeOrder.push(shapeOrder.splice(orderID, 1)[0]);				
+}
+
 
 var dx, dy, dScale;
 var item1, item2;

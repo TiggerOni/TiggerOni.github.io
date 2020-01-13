@@ -149,6 +149,29 @@ var KaraLocations = [
 	{x:2225+14, y:417+12, desc:""},
 	{x:2255+14, y:190+12, desc:""},
 	{x:1025+14, y:392+12, desc:""},
+	
+// Skeletons  22x22	=> 11x11
+	{x:1671+11, y:123+11, desc:""},
+	{x:1665+11, y:142+11, desc:""},
+	{x:1403+11, y:547+11, desc:""},
+	{x:1403+11, y:571+11, desc:""},	
+	{x:1462+11, y:721+11, desc:""},
+	{x:1344+11, y:880+11, desc:""},
+	{x:1473+11, y:945+11, desc:""},
+	
+	{x:1484+11, y:1346+11, desc:""},
+	
+	{x:1966+11, y:800+11, desc:""},
+	{x:1713+11, y:837+11, desc:""},	
+	{x:1687+11, y:855+11, desc:""},
+	{x:1589+11, y:904+11, desc:""},
+	
+	{x:1714+11, y:740+11, desc:""},
+	{x:1719+11, y:624+11, desc:""},
+	{x:1660+11, y:586+11, desc:""},
+	{x:1600+11, y:420+11, desc:""},
+
+
 ];
 
 
@@ -288,6 +311,28 @@ var KaraItems = [
 	{id:CRYSTALS, startLocID:92, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:CRYSTALS, startLocID:93, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:CRYSTALS, startLocID:94, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	
+// Skeletons	
+	{id:SKELETONS, startLocID:95, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:96, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:97, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	
+	{id:SKELETONS, startLocID:98, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:99, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:100, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	
+	{id:SKELETONS, startLocID:101, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:102, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:103, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:104, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:105, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+
+	{id:SKELETONS, startLocID:106, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:107, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:108, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:109, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:SKELETONS, startLocID:110, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	
 ];
 
 
@@ -347,22 +392,27 @@ var KaraShapes = [
 
 //Crystals
 	{items:[90, 91, 92, 93, 94], lines:[], lineColor:RGB_LAVENDER, defaultActive: false, active:false, desc:22},
+
+//Skeletons
+	{items:[95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110], lines:[], 
+			lineColor:RGB_WHITE, defaultActive: false, active:false, desc:23},
 ];
 
 
 
 var helpText = [
+	"Karazhan LeyLine app by TiggerOni.",
+	"v1.1",
 	"These foods are visible in Return to Karazhan if you've talked to Amara Lunastar.",
 	"All nodes represent foods in RtK in their best known spawn locations.",
 	"",
-	"This works like the ley line maps in Nazjatar.",
-	"If a line is red, it's crossing another line.",
+	"This works like the ley line maps in Nazjatar.  If a line is red, it's crossing another line.",
 	"",
 	"Click on a food name to toggle its shape.",
 	"Click on an active node in a shape to select it.",
 	"Click on a second node to swap nodes.",
 	"Click on a selected node to deselect it.",
-	"Shift click on a node in a shape to bring it to the top.",
+	"Shift click on a node in a shape to bring it to the top.  You can also shift click on the list to the left.",
 	"    (Useful if there\'s a shape on top that's making it hard to click)",
 	"Allow Inactive Swaps allows you to click on a node that's not part of an active shape.",
 	"",
@@ -373,14 +423,15 @@ var helpText = [
 	"\'f\' toggles all the fruits.",
 	"",
 	"Most browsers support Ctrl + scrollwheel to zoom in and out.",
-	"Ctrl + and Ctrl - allows zooming also.",
+	"Ctrl + \'+\' and Ctrl + \'-\' allows zooming also.",
 	"",
-	"Any key press closes this help."
+	"Any key press or mouse click closes this help."
 ];
 
 
 var creditText = [
-	"KaraFood.io",
+	"Karazhan LeyLine food app.",
+	"v1.1",
 	"",
 	"Programmed by TiggerOni",
 	"",
@@ -392,5 +443,5 @@ var creditText = [
 	"Part of the WoW secrets Jenefur discord group.",
 	"",
 	"",
-	"Any key press closes these credits."
+	"Any key press or mouse click closes these credits."
 ];
