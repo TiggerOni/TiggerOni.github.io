@@ -328,9 +328,23 @@ function drawItem (item) {
 	
 	var shapeSize = shapeWidth * item.scale;
 	var shapeOffset = shapeSize >> 1;
+	
+	var onDisabledLayer = !maps[locations[item.currLocID].layer].visible;
 
-	canvasContext.drawImage(symbolImg, 0, shapeHeight*item.id, shapeWidth, shapeHeight, 		
+	maps[locations[item.currLocID].layer].visible;
+	
+	
+	
+	if (showInactiveLayers && onDisabledLayer) {
+		canvasContext.save();
+		canvasContext.globalAlpha = 0.60;
+	}
+
+
+	canvasContext.drawImage(symbolImg, 0, shapeHeight*item.id, shapeWidth, shapeHeight,
 			x - shapeOffset, y-shapeOffset , shapeSize, shapeSize);		
+			
+	canvasContext.globalAlpha = 1.0;		
 }
 
 

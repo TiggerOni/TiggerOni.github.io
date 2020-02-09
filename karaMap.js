@@ -63,6 +63,12 @@ var opacity = 0.25;
 
 function loadMaps() {
 	
+	canvasContext.shadowOffsetX = 1;
+	canvasContext.shadowOffsetY = 2;
+	canvasContext.shadowBlur = 2;
+	canvasContext.shadowColor = 'black';
+	
+	
 	for (var i=0; i<MAP_COUNT; i++) {
 		maps[i].img = new Image();
 		maps[i].img.src = maps[i].file;
@@ -81,6 +87,13 @@ function loadMaps() {
 			console.log("failed to load " + this.src);
 		}
 	}	
+	
+	
+	canvasContext.shadowOffsetX = 0;
+	canvasContext.shadowOffsetY = 0;
+	canvasContext.shadowBlur = 0;
+	canvasContext.shadowColor = 'black';	
+
 	
 }
 
