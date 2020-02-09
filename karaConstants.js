@@ -16,6 +16,12 @@ const scaleDisabled = 0.33;
 const scaleNormal = 0.67;
 const scaleSelected = 1.00;
 
+
+const appWidth = 1600;
+const appHeight = 1100;
+const appRatio = (appWidth/appHeight);
+
+
 // ItemIDs
 // Note: same order as symbolSheet.png
 const YEASTY_HUNK = 0;

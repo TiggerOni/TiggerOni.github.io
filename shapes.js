@@ -6,6 +6,15 @@
 // All rights reserved.
 
 /*
+	Note: this file is a little messy.  I originally used it for a ley line "uncross the lines" app.
+	And then over time I spun off copies for different ideas/iterations.
+	Shapes aren't really used now except to test if a food has been activated and to track line colors.
+	Most of the heavy lifting is now done in the items and lines array.
+	I may get motivated to come back and clean this up.
+*/
+
+
+/*
 	Item
 		ItemID
 		startLocationID
@@ -101,9 +110,12 @@ var shapeOrder = [];
 var lines = [];
 var updateLines = true;
 
-var selectedItem = null;
+// These will hold the selected item IDs.  
+// If a new point is selected, 1 will move to 2 and the new point will become 1.
+var selectedItem1 = -1;
+var selectedItem2 = -1;
 
-var allowInactiveSwaps = false;
+var allowInactiveSwaps = true;
 
 
 
@@ -111,12 +123,19 @@ function initKaraData () {
 	// Uncomment this out if you need to test with base data.
 	// return;
 	
+	
 	locations = [];
 	locations = KaraLocations;
 	items = [];
 	items = KaraItems;
 	shapes = [];
 	shapes = KaraShapes;
+	
+	// One time fixup for the offset of the map to the food locations.
+	for (i=0; i<locations.length; i++) {
+		locations[i].x += mapXOffset;
+		locations[i].y += mapYOffset;		
+	}
 	
 	console.log("kara data initialized");
 }
@@ -127,36 +146,6 @@ function rebuildLines() {
 		return;
 	}
 	
-	lines = [];
-	
-	for (i=0; i<shapes.length; i++) {
-		var shape = shapes[i];
-		shape.lines = [];		
-		
-		if (shape.active) {
-			scale = scaleNormal;
-		} else {
-			scale = scaleDisabled;
-		}
-		
-		for (var j=0; j<shape.items.length; j++) {
-			items[shape.items[j]].scale = scale;			
-		}
-		
-		// build lines
-
-		if (shape.active) {			
-			for (var j=0; j<shape.items.length-1; j++) {
-				lines.push( {item1:shape.items[j], item2:shape.items[j+1], crossed:false} );
-				shape.lines.push(lines.length-1);
-			}
-			
-			lines.push( {item1:shape.items[j], item2:shape.items[0], crossed:false} );
-			shape.lines.push(lines.length-1);		
-		}
-	}
-	
-	testLines();
 	updateLines = false;
 }
 
@@ -164,7 +153,9 @@ function rebuildLines() {
 function resetShapes() {
 	var scale;
 
-	selectedItem = null;
+	selectedItem1 = -1;
+	selectedItem2 = -1;
+	
 	shapeOrder = [];
 	
 	for (var i=0; i<items.length; i++) {
@@ -173,19 +164,32 @@ function resetShapes() {
 		items[i].y = locations[items[i].currLocID].y;
 		items[i].targetLocID = -1;
 	}
+
 	
 	for (i=0; i<shapes.length; i++) {
 		shapeOrder[i] = i;
 		
 		shapes[i].active = shapes[i].defaultActive;
-		
-		for (var j=0; j<shapes[i].items.length; j++) {
-			items[shapes[i].items[j]].shape = i;
+	}
+	
+
+	for (i=0; i<items.length; i++) {
+		if (shapes[items[i].id].active) {
+			items[i].scale = scaleNormal;
+		} else {
+			items[i].scale = scaleDisabled;
 		}
 	}
+	
+	for (i=0; i<maps.length; i++) {
+		maps[i].visible = maps[i].defaultVisible;
+	}
 
-	updateLines = true;
-	rebuildLines();			
+	//updateLines = true;
+	//rebuildLines();	
+	
+	
+	lines = [];
 }
 
 function toggleShape(shapeID) {
@@ -329,6 +333,9 @@ function drawItem (item) {
 			x - shapeOffset, y-shapeOffset , shapeSize, shapeSize);		
 }
 
+
+/*
+// This was used for older versions of the app.  Keeping this here for reference.
 function drawShapes() {
 	
 	var dx, dy;
@@ -340,28 +347,26 @@ function drawShapes() {
 	canvasContext.shadowBlur = 2;
 	canvasContext.shadowColor = 'black';
 	
-	
 
 	// draw lines first
 	for (var i=0; i<shapes.length; i++){
 		let shape = shapes[shapeOrder[i]];
 				
-		if (!shape.active && hideInactiveItems) {
+		if (!shape.active && !showInactiveItems) {
 			continue;
 		}
-	
-		if (shape.active) {
-			for (var j=0; j<shape.lines.length; j++)
-			{
-				var line = lines[shape.lines[j]];
+		
+		for (var j=0; j<lines.length; j++) {
+			let line = lines[j];
+			
+			var index = shape.items.findIndex(id => id == line.item1);
+			
+			if (index != -1) {
 				
-				if (line.crossed) {
-					canvasContext.fillStyle = lineColors[RGB_ERROR];
-					canvasContext.strokeStyle = lineColors[RGB_ERROR];
-				} else {
-					canvasContext.fillStyle = lineColors[shape.lineColor];
-					canvasContext.strokeStyle = lineColors[shape.lineColor];
-				}
+				if (!isShowing
+				
+				canvasContext.fillStyle = lineColors[shape.lineColor];
+				canvasContext.strokeStyle = lineColors[shape.lineColor];
 				
 				canvasContext.beginPath();
 				canvasContext.moveTo(items[line.item1].x, items[line.item1].y);
@@ -369,6 +374,7 @@ function drawShapes() {
 				canvasContext.stroke();
 			}
 		}
+		
 				
 		for (j=0; j<shape.items.length; j++) {
 			drawItem(items[shape.items[j]]);
@@ -379,9 +385,97 @@ function drawShapes() {
 	canvasContext.shadowOffsetX = 0;
 	canvasContext.shadowOffsetY = 0;
 	canvasContext.shadowBlur = 0;
-	canvasContext.shadowColor = 'black';
+	canvasContext.shadowColor = 'black';	
+}
+*/
 
+// This is the new and shiny way to draw nodes and lines.
+function drawItems() {
 	
+	var dx, dy;
+	
+	canvasContext.lineWidth = 3;
+	
+	canvasContext.shadowOffsetX = 1;
+	canvasContext.shadowOffsetY = 2;
+	canvasContext.shadowBlur = 2;
+	canvasContext.shadowColor = 'black';
+	
+
+	// draw lines first
+	// We do it this way to respect the draw order of the shapes, in case we used the shift click to bring a shape to the top.
+	for (var i=0; i<shapes.length; i++){
+		let shape = shapes[shapeOrder[i]];
+				
+		// FYI: shape === food type
+		if (!shape.active && !showInactiveItems) {
+			continue;
+		}
+		
+		for (var j=0; j<lines.length; j++) {			
+			let line = lines[j];
+			
+			for (var k=0, notFound = true; k<shape.items.length && notFound; k++) {
+				if (shape.items[k] == line.item1) {
+					notFound = false;
+				}
+			}
+			
+			// Don't draw the line until we're at the right shape.
+			if (notFound) 
+				continue;
+									
+			if (isShowing(line.item1) && isShowing(line.item2)) {				
+				canvasContext.fillStyle = lineColors[shape.lineColor];
+				canvasContext.strokeStyle = lineColors[shape.lineColor];
+				
+				canvasContext.beginPath();
+				canvasContext.moveTo(items[line.item1].x, items[line.item1].y);
+				canvasContext.lineTo(items[line.item2].x, items[line.item2].y);
+				canvasContext.stroke();
+			}
+		}		
+				
+		for (j=0; j<shape.items.length; j++) {
+			if (isShowing(shape.items[j])) {
+				drawItem(items[shape.items[j]]);
+			}
+		}
+	}
+	
+	canvasContext.shadowOffsetX = 0;
+	canvasContext.shadowOffsetY = 0;
+	canvasContext.shadowBlur = 0;
+	canvasContext.shadowColor = 'black';	
+}
+
+// checks all the flags for the item + layers + options and determines if we're rendering the shape.
+function isShowing(itemID) {
+		
+	let item = items[itemID];
+	if (item == null)
+		return false;
+	
+	var layerVisible = maps[locations[item.currLocID].layer].visible;	
+	var shapeActive = shapes[item.id].active;
+		
+	
+	if (attachFoodToLayers) {
+		
+		// visiblity is now coupled to map layers showing.				
+		if (layerVisible || showInactiveLayers) {		
+			if (shapeActive || showInactiveItems) {
+				return true;
+			}
+		}
+		
+	} else {
+		// Previous rules apply
+		if (shapeActive || showInactiveItems) 
+			return true;		
+	}
+		
+	return false;
 }
 
 
@@ -423,38 +517,75 @@ function testItemClick(x, y, shiftKey) {
 		
 		for (var j=0; j<shape.items.length; j++) {
 			
-			let item = items[shape.items[j]];
+			let itemID = shape.items[j];
+			let item = items[itemID];
 					
 			halfItemSize = (item.scale * spriteSize) >> 1;
 			if ( x <= item.x - halfItemSize || x >= item.x + halfItemSize
 				|| y <= item.y - halfItemSize || y >= item.y + halfItemSize)
 			{
 				continue;
-			}
-			
-			
+			}			
+						
 			if (shiftKey) {
 				shapeOrder.push(shapeOrder.splice(i, 1)[0]);				
 				return;
 			}
 			
-			if (!shape.active && !allowInactiveSwaps) {
+			if (!isShowing(itemID)) {
 				continue;
 			}
-			
-			if (selectedItem == item) {
-				selectedItem = null;
+									
+			if (selectedItem1 == itemID) {
+				items[selectedItem1].scale = scaleNormal;
+				selectedItem1 = -1;
+				if (selectedItem2 >= 0) {
+					selectedItem1 = selectedItem2;
+					selectedItem2 = -1;
+				}
 				item.scale = scaleNormal;
-			} else if (selectedItem == null) {
-				selectedItem = item;
+			}
+			else if (selectedItem2 == itemID) {
+				items[selectedItem2].scale = scaleNormal;
+				selectedItem2= -1;
+				item.scale = scaleNormal;
+			} else if (selectedItem1 == -1) {
+				selectedItem1 = itemID;
 				item.scale = scaleSelected;
 			} else {
-				swapItems ( item, selectedItem );
-			}				
+				if (selectedItem2 >= 0) {
+					items[selectedItem2].scale = scaleNormal;
+				}
+				selectedItem2 = selectedItem1;
+				selectedItem1 = itemID;
+				item.scale = scaleSelected;
+			} 				
 			break;
 		}
 	}
 }
+
+function makeLine() {
+	if (selectedItem1 >= 0 && selectedItem2 >= 0) {
+		
+		// check to make sure we don't already have the line.
+		// If we do, remove it.
+		for (var i=0; i<lines.length; i++) {
+			if (lines[i].item1 == selectedItem1 && lines[i].item2 == selectedItem2) {
+				lines.splice(i, 1);
+				return;
+			}
+			if (lines[i].item2 == selectedItem1 && lines[i].item1 == selectedItem2) {
+				lines.splice(i, 1);
+				return;
+			}
+		}
+		
+		lines.push( {item1:selectedItem1, item2:selectedItem2} );
+		
+	}
+}
+
 
 function moveShapeToFront(shapeID) {
 	var orderID = shapeOrder.findIndex(element => element == shapeID);
@@ -462,11 +593,20 @@ function moveShapeToFront(shapeID) {
 }
 
 
+function swapSelectedItems() {
+	if (selectedItem1 >= 0 && selectedItem2 >= 0) {
+		swapItems(items[selectedItem1], items[selectedItem2]);
+		//selectedItem1 = -1;
+		//selectedItem2 = -1;
+	}
+}
+
 var dx, dy, dScale;
 var item1, item2;
 const framesToMove = 8;
 
 function swapItems(itemA, itemB) {
+			
 	item1 = itemA;
 	item2 = itemB;
 	
@@ -477,7 +617,8 @@ function swapItems(itemA, itemB) {
 	
 	dx = (locations[item1.targetLocID].x - locations[item1.currLocID].x) / framesToMove;
 	dy = (locations[item1.targetLocID].y - locations[item1.currLocID].y) / framesToMove;
-	dScale = (scaleSelected - scaleNormal)/ framesToMove;	
+	//dScale = (scaleSelected - scaleNormal)/ framesToMove;	
+	dScale = 0;
 	moving = true;
 }
 
@@ -502,7 +643,7 @@ function updateItems() {
 			item1.y = locations[item1.targetLocID].y;
 			item1.currLocID = item1.targetLocID;
 			item1.targetLocID = null;
-			item1.scale = scaleNormal;
+			//item1.scale = scaleNormal;
 			item1 = null;
 		} 
 	}
@@ -517,7 +658,7 @@ function updateItems() {
 			item2.y = locations[item2.targetLocID].y;
 			item2.currLocID = item2.targetLocID;
 			item2.targetLocID = null;
-			item2.scale = scaleNormal;
+			//item2.scale = scaleNormal;
 			item2 = null;
 		} 
 	}

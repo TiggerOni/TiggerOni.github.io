@@ -6,186 +6,171 @@
 // All rights reserved.
 
 
+// Note: we're sharing the location data from the leyLine app for convienience and maintainability.
+// I probably should move all the data into a single shared file.
+
+
+//  Adjusted on resize.  The scale of the window inner height relative to the hard size of the maps.
+var appScale = 1.0;
+
+
+
+// The adds to each coordinate is half the sprite used to generate them.
+// We want our point to be at the center of the sprite.
+// GIMP exports the top left.  
+// We have to factor in half the size of the sprite to get the map coordinates for each food.
 var KaraLocations = [
-	// {x:100, y:100, desc:"upper left"},
-	// {x:125, y:200, desc:"somewhere in the middle"},
-	// {x:300, y:100, desc:"along the top"},
-	
-	// {x:600, y:500, desc:"more in the middle"},	
-	// {x:800, y:200, desc:"right side"},
-	// {x:400, y:300, desc:"above the middle"},
-	
-	// {x:900, y:900, desc:"lower right"},
-	// {x:100, y:900, desc:"lower left"},
-	// {x:450, y:450, desc:"just left of middle"},
-	// {x:300, y:300, desc:"towards the upper left"},
-	
-	
-// These coordinates are pulled from the layers of Llianthta's map. 
-// Each coordinate needs to be the center exact point, so the pluses are half the layer size.
-// Todo: add the place descriptions from the docs for each location point
-	
-//Yeasty Hunk
-	{x:1619+9, y:408+9, desc:""},	//17x17	=> 9x9
-	{x:1338+9, y:342+9, desc:""},		
-	{x:1513+9, y:1245+9, desc:""},
-	{x:1553+9, y:768+9, desc:""},  	
-//Stale Loaf
-	{x:1735+13, y:596+13, desc:""},
-	{x:1763+13, y:995+13, desc:""},	//26x26	=> 13x13
-	{x:1618+13, y:1329+13, desc:""},
-	{x:1463+13, y:693+13, desc:""},
-//Dusty Bun
-	{x:1667+9, y:165+9, desc:""},	//18x17	=> 9x9
-	{x:1083+9, y:299+9, desc:""},
-	{x:1442+9, y:877+9, desc:""},
-	{x:1635+9, y:1047+9, desc:""},
-//Cross Bun
-	{x:1919+11, y:809+12, desc:""},	//22x23	=> 11x12
-	{x:1880+11, y:938+12, desc:""},
-	{x:1610+11, y:1002+12, desc:""},
-	{x:1415+11, y:604+12, desc:""},
-//Baguette
-	{x:1804+10, y:595+13, desc:""},	//19x26	=> 10x13
-	{x:1222+10, y:1162+13, desc:""},
-	{x:1074+10, y:125+13, desc:""},
-	{x:1840+10, y:70+13, desc:""},
-	
-//Slathered Rib
-	{x:1572+9, y:732+9, desc:""},	//17x17	=> 9x9
-	{x:2229+9, y:370+9, desc:""},
-	{x:1554+9, y:738+9, desc:""},
-	{x:1487+9, y:1350+9, desc:""},
-//Meaty Morsel
-	{x:1747+13, y:984+13, desc:""},	//26x26	=> 13x13
-	{x:1867+13, y:390+13, desc:""},
-	{x:1590+13, y:917+13, desc:""},
-//Marbled Steak
-	{x:1742+9, y:1421+9, desc:""},	//18x17	=> 9x9
-	{x:1782+9, y:508+9, desc:""},
-	{x:1991+9, y:435+9, desc:""},
-	{x:2149+9, y:324+9, desc:""},
-//Juicy Drumstick
-	{x:2339+11, y:446+12, desc:""},
-	{x:2279+11, y:278+12, desc:""},	//22x23	=> 11x12
-	{x:1472+11, y:802+12, desc:""},
-	{x:1622+11, y:1333+12, desc:""},
-//Fishy Bits
-	{x:1425+10, y:718+13, desc:""},
-	{x:1901+10, y:1185+13, desc:""},	//19x26	=> 10x13
-	{x:1996+10, y:348+13, desc:""},
-	{x:1268+10, y:426+13, desc:""},
-	
-//Wilderbew Special
-	{x:1552+9, y:404+9, desc:""},	//17x17	=> 9x9
-	{x:2023+9, y:623+9, desc:""},
-	{x:1707+9, y:861+9, desc:""},
-	{x:1559+9, y:718+9, desc:""},
-//Strongarm Stout
-	{x:1686+13, y:683+13, desc:""},	//26x26	=> 13x13
-	{x:1852+13, y:610+13, desc:""},
-	{x:1655+13, y:1394+13, desc:""},
-	{x:1454+13, y:696+13, desc:""},
-//Karaweizen
-	{x:2164+9, y:700+9, desc:""},	//18x17	=> 9x9
-	{x:935+9, y:319+9, desc:""},
-	{x:1076+9, y:448+9, desc:""},
-	{x:1795+9, y:916+9, desc:""},
+// Yeasty Hunk		9x9
+{ x:775+4, y:282+4, layer:GUEST },
+{ x:653+4, y:247+4, layer:BALCONY },
+{ x:732+4, y:680+4, layer:ENTRANCE },
+{ x:736+4, y:463+4, layer:BANQUET },
+
+// Stale Loaf,     9x9
+{ x:840+4, y:372+4, layer:GUEST },
+{ x:843+4, y:571+4, layer:UPPER_STAIR },
+{ x:695+4, y:427+4, layer:BANQUET },
+{ x:770+4, y:724+4, layer:KITCHEN },
+
+// Dusty Bun	7x7
+{ x:801+3, y:160+3, layer:GUEST },
+{ x:521+3, y:240+3, layer:GUEST },
+{ x:637+3, y:519+3, layer:BANQUET },
+{ x:792+3, y:585+3, layer:ENTRANCE },
+
+// Cross Bun	9x9
+{ x:683+4, y:374+4, layer:GUEST },
+{ x:780+4, y:560+4, layer:MENAGERIE},
+{ x:904+4, y:478+4, layer:BANQUET },
+{ x:894+4, y:531+4, layer:SERVANT },
+
+// Baguette		15x13
+{ x:529+7, y:159+6, layer:BALCONY },
+{ x:892+7, y:116+6, layer:GUEST },
+{ x:851+7, y:378+6, layer:BANQUET },
+{ x:593+7, y:645+6, layer:MENAGERIE},
+
+
+// Slathered Rib
+{ x:1068+4, y:252+5, layer:SERVANT },	// 9x11
+{ x:736+4, y:448+4, layer:BANQUET },	// 9x9
+{ x:743+4, y:443+4, layer:BANQUET },	// 9x9
+{ x:701+4, y:732+4, layer:KITCHEN },	// 9x9
+
+// Meaty Morsel	11x11
+{ x:769+5, y:527+5, layer:GUEST },
+{ x:904+5, y:269+5, layer:GUEST },
+{ x:833+5, y:568+5, layer:UPPER_STAIR },
+
+// Marbled Steak
+{ x:953+4, y:287+5, layer:SERVANT },	// 9x11
+{ x:1045+3, y:240+3, layer:GUEST },		// 7x7
+{ x:832+3, y:769+3, layer:SERVANT },	// 7x7
+{ x:858+3, y:332+3, layer:GUEST },		// 7x7
+
+// Juicy Drumstick	9x9
+{ x:1103+4, y:219+4, layer:GUEST },
+{ x:1138+4, y:302+4, layer:GUEST },
+{ x:694+4, y:474+4, layer:BANQUET },
+{ x:772+4, y:726+4, layer:SERVANT },
+
+// Fishy Bits	15x13
+{ x:674+7, y:440+6, layer:BANQUET },
+{ x:904+7, y:650+6, layer:KITCHEN },
+{ x:956+7, y:246+6, layer:GUEST },
+{ x:618+7, y:291+6, layer:ENTRANCE },
+
+
+//Wilderbew Special	9x9
+{ x:738+4, y:432+4, layer:BANQUET },
+{ x:748+4, y:278+4, layer:GUEST },
+{ x:829+4, y:494+4, layer:ENTRANCE },
+{ x:954+4, y:389+4, layer:BANQUET },
+
+//Strongarm Stout	10x10
+{ x:893+5, y:377+5, layer:GUEST },
+{ x:691+5, y:422+5, layer:BANQUET },
+{ x:818+5, y:497+5, layer:ENTRANCE },
+{ x:786+5, y:754+5, layer:KITCHEN },
+
+//Karaweizen	7x7
+{ x:508+3, y:297+3, layer:GUEST },
+{ x:449+3, y:238+3, layer:GUEST },
+{ x:854+3, y:528+3, layer:BANQUET },
+{ x:1055+3, y:421+3, layer:GUEST },
+
 //Hoppy Mead
-	{x:1971+11, y:1099+12, desc:""},	//22x23	=> 11x12
-	{x:1316+11, y:339+12, desc:""},
-	{x:1222+11, y:493+12, desc:""},
-	{x:1543+11, y:818+12, desc:""},
-//Ghosty Pale Ale
-	{x:1420+10, y:845+13, desc:""},	//19x26	=> 10x13
-	{x:1434+10, y:873+13, desc:""},
-	{x:1941+10, y:1153+13, desc:""},
-	{x:1028+10, y:537+13, desc:""},
-	
-//Old Apple
-	{x:2322+9, y:721+9, desc:""},
-	{x:1926+9, y:806+9, desc:""},	//17x17	=> 9x9
-	{x:1347+9, y:302+9, desc:""},
-	{x:1738+9, y:1378+9, desc:""},
-//Orange Orange
-	{x:1905+13, y:408+13, desc:""},
-	{x:1591+13, y:1114+13, desc:""},	//26x26	=> 13x13
-	{x:1444+13, y:1445+13, desc:""},
-	{x:1471+13, y:481+13, desc:""},
-//Lost Watermelon
-	{x:2437+9, y:530+9, desc:""},	//18x17	=> 9x9
-	{x:1311+9, y:490+9, desc:""},
-	{x:667+9, y:426+9, desc:""},
-	{x:1620+9, y:1170+9, desc:""},
-//Hidden Banana
-	{x:1266+11, y:313+12, desc:""},	//22x23	=> 11x12
-	{x:1408+11, y:761+12, desc:""},
-	{x:1443+11, y:869+12, desc:""},
-	{x:1967+11, y:1077+12, desc:""},
-//Bunch of Berries
-	{x:2192+10, y:257+13, desc:""},	//19x26	=> 10x13
-	{x:1278+10, y:925+13, desc:""},
-	{x:1318+10, y:752+13, desc:""},
-	{x:1279+10, y:595+13, desc:""},
-	
-//Pedestals
-	{x:2209+12, y:476+12, desc:""},	//24x24	=> 12x12
-	{x:2155+12, y:535+12, desc:""},
-	{x:1586+12, y:900+12, desc:""},
-	{x:1409+12, y:802+12, desc:""},
-	{x:1412+12, y:739+12, desc:""},
-	{x:1246+12, y:591+12, desc:""},
-	{x:1114+12, y:613+12, desc:""},
-	{x:1157+12, y:212+12, desc:""},
-	{x:1283+12, y:264+12, desc:""},
-	
-//Kibbles
-	{x:1221+4, y:306+12, desc:""},	//7x24	=> 4x12
-	{x:1127+4, y:284+12, desc:""},
+{ x:642+3, y:246+3, layer:BALCONY },	// 7x7
+{ x:595+3, y:336+3, layer:ENTRANCE },	// 7x7
+{ x:733+4, y:486+4, layer:BANQUET },	// 9x9
+{ x:944+4, y:613+4, layer:SERVANT },	// 9x9
 
-//Crystals
-	{x:1367+14, y:1508+12, desc:""},	//28x24	=> 14x12
-	{x:1283+14, y:758+12, desc:""},
-	{x:2225+14, y:417+12, desc:""},
-	{x:2255+14, y:190+12, desc:""},
-	{x:1025+14, y:392+12, desc:""},
-	
-// Skeletons  22x22	=> 11x11
-	{x:1671+11, y:123+11, desc:""},
-	{x:1665+11, y:142+11, desc:""},
-	{x:1403+11, y:547+11, desc:""},
-	{x:1403+11, y:571+11, desc:""},	
-	{x:1462+11, y:721+11, desc:""},
-	{x:1344+11, y:880+11, desc:""},
-	{x:1473+11, y:945+11, desc:""},
-	
-	{x:1484+11, y:1346+11, desc:""},
-	
-	{x:1966+11, y:800+11, desc:""},
-	{x:1713+11, y:837+11, desc:""},	
-	{x:1687+11, y:855+11, desc:""},
-	{x:1589+11, y:904+11, desc:""},
-	
-	{x:1714+11, y:740+11, desc:""},
-	{x:1719+11, y:624+11, desc:""},
-	{x:1660+11, y:586+11, desc:""},
-	{x:1600+11, y:420+11, desc:""},
+//Ghostly Pale Ale
+{ x:503+7, y:347+6, layer:ENTRANCE },	// 15x13	
+{ x:671+7, y:495+7, layer:BANQUET },	// 15x14
+{ x:702+7, y:503+6, layer:ENTRANCE },	// 15x13	
+{ x:925+7, y:635+6, layer:KITCHEN },	// 15x13
 
+
+// Old Apple
+{ x:663+4, y:231+4, layer:BALCONY },	// 9x9
+{ x:927+4, y:475+5, layer:GUEST },		// 9x10
+{ x:1128+4, y:432+4, layer:GUEST },		// 9x9
+{ x:827+4, y:747+4, layer:SERVANT },	// 9x9
+
+//	Orange Orange
+{ x:710+6, y:313+6, layer:GUEST },		// 12x12
+{ x:775+4, y:618+4, layer:LOWER_STAIR },	// 9x9
+{ x:922+4, y:278+4, layer:GUEST },		// 9x9
+{ x:687+4, y:777+4, layer:KITCHEN },	// 9x9
+
+// Lost Watermelon	7x7
+{ x:631+3, y:313+3, layer:SERVANT },	
+{ x:771+3, y:646+3, layer:SERVANT },
+{ x:320+3, y:288+3, layer:GUEST },
+{ x:1180+3, y:336+3, layer:GUEST },
+
+// Hidden Banana
+{ x:617+3, y:233+3, layer:BALCONY },	// 7x7
+{ x:686+4, y:451+4, layer:ENTRANCE },	// 9x9
+{ x:684+4, y:508+4, layer:BANQUET },	// 9x9
+{ x:940+4, y:605+4, layer:KITCHEN },	// 9x9
+
+// Bunch of Berries	15x13
+{ x:619+7, y:382+6, layer:BALCONY },
+{ x:623+7, y:451+6, layer:BANQUET },
+{ x:622+7, y:522+6, layer:MENAGERIE },
+{ x:1060+7, y:203+6, layer:GUEST },
+
+
+// Pedestals
+{ x:556+5, y:182+5, layer:GUEST },		// 11x11
+{ x:616+5, y:208+5, layer:GUEST },		// 11x11
+{ x:536+5, y:382+5, layer:GUEST },		// 11x11
+{ x:599+5, y:369+5, layer:GUEST },		// 11x11
+{ x:671+4, y:445+4, layer:BANQUET },	// 9x9
+{ x:669+4, y:474+4, layer:BANQUET },	// 9x9
+{ x:768+4, y:521+4, layer:GUEST },		// 9x9
+{ x:1071+5, y:314+5, layer:GUEST },		// 11x11
+{ x:1043+5, y:345+5, layer:GUEST },		// 11x11
+
+// Kibbles	7x7
+{ x:540+3, y:226+3, layer:GUEST },
+{ x:587+3, y:237+3, layer:GUEST },
+
+// Crystals		11x11
+{ x:496+5, y:271+5, layer:GUEST },		/* Opera */
+{ x:610+5, y:451+5, layer:BANQUET }, 	/* Moros */
+{ x:666+5, y:812+5, layer:MENAGERIE },	/* Curator */ 	
+{ x:1074+5, y:276+5, layer:SERVANT },	/* Servants */ 
+{ x:1099+5, y:171+5, layer:GUEST },		/* Guest */ 	
 
 ];
 
 
 
+// Note: since we stored all the images in sequence, id for shape is the same for graphic and array index.
 var KaraItems = [
-	// {id:STALE_LOAF, startLocID:0, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:STALE_LOAF, startLocID:2, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:STALE_LOAF, startLocID:3, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:STALE_LOAF, startLocID:1, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-		
-	// {id:JUICY_DRUMSTICK, startLocID:4, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:JUICY_DRUMSTICK, startLocID:5, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:JUICY_DRUMSTICK, startLocID:7, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	// {id:JUICY_DRUMSTICK, startLocID:6, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},	
 	
 //Yeasty Hunk
 	{id:YEASTY_HUNK, startLocID:0, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
@@ -313,6 +298,9 @@ var KaraItems = [
 	{id:CRYSTALS, startLocID:94, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	
 // Skeletons	
+// Mace: I didn't update these because the data was pulled from Llanthta's map, and it uses a different coordinate system.
+// When I updated my maps, I didn't have that data at that time.
+/*
 	{id:SKELETONS, startLocID:95, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:SKELETONS, startLocID:96, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:SKELETONS, startLocID:97, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
@@ -332,13 +320,11 @@ var KaraItems = [
 	{id:SKELETONS, startLocID:108, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:SKELETONS, startLocID:109, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:SKELETONS, startLocID:110, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	
+*/	
 ];
 
 
 var KaraShapes = [
-//	{items:[0,1,2,3], lines:[], lineColor:RGB_PALE_BLUE, defaultActive: true, active:false},
-//	{items:[4,5,6,7], lines:[], lineColor:RGB_PALE_PINK, defaultActive: true, active:false},
 
 //Yeasty Hunk
 	{items:[0,1,2,3], lines:[], lineColor:RGB_PALE_BLUE, defaultActive: false, active:false, desc:0},
@@ -354,7 +340,7 @@ var KaraShapes = [
 //Slathered Rib
 	{items:[20,21,22,23], lines:[], lineColor:RGB_PALE_PINK, defaultActive: false, active:false, desc:5},
 //Meaty Morsel
-	{items:[24,25,26], lines:[], lineColor:RGB_PALE_PINK, defaultActive: false, active:false, desc:6},
+	{items:[24,25,26], lines:[], lineColor:RGB_PALE_PINK, defaultActive: true, active:false, desc:6},
 //Marbled Steak
 	{items:[27,28,29,30], lines:[], lineColor:RGB_PALE_PINK, defaultActive: false, active:false, desc:7},
 //Juicy Drumstick
@@ -388,50 +374,52 @@ var KaraShapes = [
 	{items:[79,80,81,82,83,84,85,86,87], lines:[], lineColor:RGB_PALE_ORANGE, defaultActive: false, active:false, desc:20},
 	
 //Kibbles
-	{items:[88, 89], lines:[], lineColor:RGB_PALE_GREEN, defaultActive: false, active:false, desc:21},
+	{items:[88, 89], lines:[], lineColor:RGB_PALE_GREEN, defaultActive: true, active:false, desc:21},
 
 //Crystals
-	{items:[90, 91, 92, 93, 94], lines:[], lineColor:RGB_LAVENDER, defaultActive: false, active:false, desc:22},
+	{items:[90, 91, 92, 93, 94], lines:[], lineColor:RGB_LAVENDER, defaultActive: true, active:false, desc:22},
+
 
 //Skeletons
-	{items:[95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110], lines:[], 
-			lineColor:RGB_WHITE, defaultActive: false, active:false, desc:23},
+//	{items:[95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110], lines:[], 
+//			lineColor:RGB_WHITE, defaultActive: false, active:false, desc:23},
 ];
 
 
+var tipsText = [
+	"Last two nodes clicked are selected.",
+	"Press \'L'\ to toggle line between nodes.",
+	"Press \'S'\ to swap selected nodes.",
+	"Press \'R'\ to reset the map.",
+	
+	
+];
 
 var helpText = [
-	"Karazhan LeyLine app by TiggerOni.",
-	"v1.1",
+	"Interactive Karazhan Map app by TiggerOni.",
+	"v2.0",
 	"These foods are visible in Return to Karazhan if you've talked to Amara Lunastar.",
-	"All nodes represent foods in RtK in their best known spawn locations.",
+	"All foods, map layers, and items shown are from RtK in their best known locations.",
 	"",
-	"This works like the ley line maps in Nazjatar.  If a line is red, it's crossing another line.",
+	"Click on a food name to activate it.",
+	"Click on a level name to activate it.",	
+	"Click on a node to select it.  Last two nodes clicked on are selected.",
 	"",
-	"Click on a food name to toggle its shape.",
-	"Click on an active node in a shape to select it.",
-	"Click on a second node to swap nodes.",
-	"Click on a selected node to deselect it.",
-	"Shift click on a node in a shape to bring it to the top.  You can also shift click on the list to the left.",
-	"    (Useful if there\'s a shape on top that's making it hard to click)",
-	"Allow Inactive Swaps allows you to click on a node that's not part of an active shape.",
+	"Press \'L'\ to add or remove a line between selected nodes.",
+	"Press \'S'\ to swap selected nodes.",
+	"Press \'R'\ to reset the map.",
 	"",
-	"\'r\' resets the board.",
-	"\'m\' toggles all the meats.",
-	"\'d\' toggles all the drinks.",
-	"\'b\' toggles all the breads.",
-	"\'f\' toggles all the fruits.",
+	"Shift click on a node to bring all its nodes to the top.",
+	"    (Useful if there\'s a node on top that's making it hard to click)",
 	"",
-	"Most browsers support Ctrl + scrollwheel to zoom in and out.",
-	"Ctrl + \'+\' and Ctrl + \'-\' allows zooming also.",
 	"",
 	"Any key press or mouse click closes this help."
 ];
 
 
 var creditText = [
-	"Karazhan LeyLine food app.",
-	"v1.1",
+	"Karazhan Map app",
+	"v2.0",
 	"",
 	"Programmed by TiggerOni",
 	"",
@@ -443,5 +431,5 @@ var creditText = [
 	"Part of the WoW secrets Jenefur discord group.",
 	"",
 	"",
-	"Any key press or mouse click closes these credits."
+	"Any key press closes these credits."
 ];
