@@ -304,11 +304,14 @@ function drawLegend() {
 function drawEverything() {		
 	
 	canvasContext.fillStyle = 'black';
-	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+	canvasContext.fillRect(0, 0, window.innerWidth, window.innerHeight);
 	
 	
-	if (bgImg && showingMap) {		
+	if (bgImg) {		
 		canvasContext.drawImage(bgImg, 0, 0);			
+	}
+
+	if (showingMap) {
 		drawMap();
 	}
 
@@ -325,7 +328,6 @@ function drawEverything() {
 	
 			updateItems();
 		
-			//drawShapes();
 			drawItems();
 		}		
 	}
