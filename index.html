@@ -1,58 +1,56 @@
 <!DOCTYPE	html>
 <!--
 //
-// Part of the food app suite for Karazhan.
-// Written by TiggerOni
-// Jan. 2020
+// Home page for TiggerOni
 // For the Jenafur project for the Wow Secrets Discord.
 // All rights reserved.
 -->
 
 <html	lang="en">
 <head>
-	<meta name="viewport" content="initial-scale=1">
 	<meta	content="text/html;charset=utf-8"	http-equiv="Content-Type">
 	<meta	content="utf-8"	http-equiv="encoding">
     <style>
-   html, body {
+<!--     html, body {
+      width: 100%;
       height: 100%;
       margin: 0px;
       border: 0;
-<!--      overflow: scroll; 	-->
+      overflow: scroll; 
       display: block;  /* No floating content on sides */
     }	
-
-	
-<!--	
-	@viewport{
-		zoom: 1.0;
-		width: extend-to-zoom;
+	container {
+		width: 400px;
+		height: 400px;
+		overflow: auto;
+		border: 1px solid;
 	}
--->
-	
-	
+ -->	
+	body {font-family: "Lato", sans-serif"}
 	canvas{
-	  display: block;	  
+	  display: block;
 	}
-
     </style>
-	<title>Karazhan Interactive Map App using Foods</title>
-
+	<title>Karazhan food maps and apps</title>
+	<!-- link to main stylesheet -->
+	<link rel="stylesheet" type="text/css" href="/css/main.css"> 
+	
 </head>
 <body>
 	<noscript>You need to enable JavaScript to run this app.</noscript>
 
 <div id="container">
 </div>
-	<canvas id='gameCanvas' style='position:absolute; height:100% left:0px; top:0px;'>
-
-
-<script type="text/javascript" src="karaConstants.js"></script>
-<script type="text/javascript" src="karaMap.js"></script>
-<script type="text/javascript" src="karaData.js"></script>
-<script type="text/javascript" src="shapes.js"></script>
-<script type="text/javascript" src="mapMaker.js"></script>
-
+	<center>
+		<h1>TiggerOni's maps and apps for the Jenafur Secret</h1>
+		<br>
+			<h2>
+			<p><a href="./map/index.html">Karazhan foods and layers map</a>
+			<p><a href="./leylines/index.html">Karazhan foods as ley lines toy</a>
+			<p><a href="./shapes/index.html">Karazhan foods shape maker</a><br>(old map, old data, doesn't autoscale)
+			<p>Karazhan map with kibble shape finder ( coming soon! )
+			</h2>
+	</center>
 
 </body>
 </html>

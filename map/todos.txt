@@ -1,0 +1,89 @@
+shapemaker todos:
+
+Don't draw shape lines (or make them togglable)
+
+Click on two points and hit enter to add line.
+
+Del or Backspace or 'u' undos last line.
+
+"R" resets all lines.
+
+Make lines between two differnt colors have a gradient line.
+
+Add pictures for kibbles, left and right;
+
+
+
+
+
+Attach food to layers
+
+Show inactive layers
+
+Show inactive foods
+
+
+if (!attach && !inactiveLayers && !inactiveFoods) {
+	
+}
+	
+
+
+
+
+if food selected
+	show selected
+else if food active and (layer active OR !attachFoodToLayers)
+	show active
+else if food active OR (layer active OR !attachFoodToLayers) 
+	show disabled
+else if food disabled and layer active and show inactive foods
+	show disabled
+else	
+	hide
+	
+	
+
+food 
+	selected
+	active
+	inactive but show inactive foods
+	hidden
+
+layers
+	active
+	inactive but show inactive layers
+	hidden
+	
+	
+
+attachFood to layers
+	
+
+if (!attached food to layers)
+	if (selected)
+		show selected
+	else if (active)
+		show active
+	else if (inactive AND show inactive foods)
+		show disabled
+	else
+		hide
+
+		
+else (attached food to layers)
+	if (layer is hidden)
+		Food is hidden unless selected
+	if (layer is disabled)
+		Food is disabled unless selected
+	else	
+		Food is normal
+			
+Always draw all food on top of the layers, even if attached to layers
+
+
+
+I have to sort lines and items by active/drawOrder
+
+Layers only modify visibility
+
