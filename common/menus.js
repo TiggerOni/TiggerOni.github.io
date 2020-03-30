@@ -26,6 +26,9 @@ var showMapLegend = true;
 var showTips = true;
 
 
+var actionsX = 375;
+var actionsY = 400;
+
 
 function highlight(x, y, w, h) {
 	
@@ -41,6 +44,14 @@ function highlight(x, y, w, h) {
 	canvasContext.fillStyle = "white";		
 }
 
+function border(x, y, w, h) {
+	
+	canvasContext.beginPath();
+	canvasContext.strokeStyle = "gray";
+	canvasContext.lineWidth = 1;
+	canvasContext.rect(x, y, w, h);
+	canvasContext.stroke();
+}
 
 function drawFoodLegend() {
 	if (!showFoodLegend) {
@@ -49,9 +60,7 @@ function drawFoodLegend() {
 	
 	var spriteScale = 0.75;
 	var spriteOffset = shapeWidth * spriteScale / 2;
-	
-	canvasContext.fillStyle = 'black';
-	
+		
 	var x = legendFoodX;
 	var y = legendFoodY;
 	
@@ -62,9 +71,10 @@ function drawFoodLegend() {
 	canvasContext.textBaseline = 'middle';
 		
 	for (var i=0; i<shapes.length; i++) {
-		if (shapes[i].active) {
-			
+		if (shapes[i].active) {			
 			highlight(legendFoodX, y, legendItemWidth, legendItemHeight);
+		} else {
+			border(x, y, legendItemWidth, legendItemHeight);
 		}
 		
 		drawSprite (i, spriteScale, legendFoodX + spriteOffset , y + spriteOffset);
@@ -109,6 +119,8 @@ function drawOptionsLegend() {
 	for (var i=0; i<options.length; i++) {
 		if (options[i].value) {
 			highlight(x, y, legendItemWidth, legendItemHeight);
+		} else {
+			border(x, y, legendItemWidth, legendItemHeight);
 		}
 		canvasContext.fillText(options[i].text, x + textXOffset, y + textYOffset);
 		
@@ -153,6 +165,8 @@ function drawMapLegend() {
 
 		if (maps[i].visible) {
 			highlight(x, y, legendItemWidth, legendItemHeight);
+		} else {
+			border(x, y, legendItemWidth, legendItemHeight);
 		}
 		
 		canvasContext.fillText(maps[i].name, x + textXOffset, y + textYOffset);

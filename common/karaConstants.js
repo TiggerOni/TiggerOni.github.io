@@ -12,9 +12,9 @@ var shapeCount = 24;
 
 const spriteSize = 36;
 
-const scaleDisabled = 0.33;	
-const scaleNormal = 0.50;
-const scaleSelected = 0.75;
+var scaleDisabled = 0.33;	
+var scaleNormal = 0.50;
+var scaleSelected = 0.75;
 
 
 const appWidth = 1600;
@@ -94,6 +94,7 @@ var lineColors = [
 	'rgb(255, 167, 108)',		// pale orange
 	'rgb(128, 0, 255)',			// lavender	
 	'rgb(255, 255, 255)',		// white
+	'rgba(0,0,0,0)',			// transparent
 ];
 
 const RGB_ERROR = 0;
@@ -104,3 +105,4 @@ const RGB_PALE_GREEN = 4;
 const RGB_PALE_ORANGE = 5;
 const RGB_LAVENDER = 6;
 const RGB_WHITE = 7;
+const RGB_TRANSPARENT = 8;

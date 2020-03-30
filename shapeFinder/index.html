@@ -1,0 +1,62 @@
+<!DOCTYPE	html>
+<!--
+//
+// Part of the food app suite for Karazhan.
+// Written by TiggerOni
+// March 2020
+// For the Jenafur project for the Wow Secrets Discord.
+// All rights reserved.
+-->
+
+<html	lang="en">
+<head>
+	<meta name="viewport" content="initial-scale=1">
+	<meta	content="text/html;charset=utf-8"	http-equiv="Content-Type">
+	<meta	content="utf-8"	http-equiv="encoding">
+    <style>
+   html, body {
+      height: 100%;
+      margin: 0px;
+      border: 0;
+<!--      overflow: scroll; 	-->
+      display: block;  /* No floating content on sides */
+    }	
+
+	
+<!--	
+	@viewport{
+		zoom: 1.0;
+		width: extend-to-zoom;
+	}
+-->
+	
+	
+	canvas{
+	  display: block;	  
+	}
+
+    </style>
+	<title>Karazhan Interactive Shape Finder App</title>
+
+</head>
+<body>
+	<noscript>You need to enable JavaScript to run this app.</noscript>
+
+<div id="container">
+</div>
+	<canvas id='gameCanvas' style='position:absolute; height:100% left:0px; top:0px;'>
+
+
+	<script type="text/javascript" src="../common/karaConstants.js"></script>
+	<script type="text/javascript" src="../common/karaMapLayered.js"></script>
+	<script type="text/javascript" src="../common/karaData.js"></script>
+	<script type="text/javascript" src="../common/shapes.js"></script>
+	<script type="text/javascript" src="../common/menus.js"></script>
+
+	<script type="text/javascript" src="text.js"></script>
+	<script type="text/javascript" src="shapeSearch.js"></script>
+	<script type="text/javascript" src="shapeFinder.js"></script>
+
+
+</body>
+</html>

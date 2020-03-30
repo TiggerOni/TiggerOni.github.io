@@ -119,6 +119,9 @@ var allowInactiveSwaps = true;
 var leyLineMode = false;
 
 
+var activeLines = [];	// This will be a list of arrays of items.  Connect the first and last item.  Used by the search routine to report results.
+var activeLine = -1;
+
 
 function initKaraData () {
 	// Uncomment this out if you need to test with base data.
@@ -455,6 +458,40 @@ function drawItems() {
 	canvasContext.shadowColor = 'black';
 	
 
+
+	// If we're using the activeLines, this will execute and return.
+	if (activeLine > -1) {
+		
+		canvasContext.fillStyle = 'white';
+		canvasContext.strokeStyle = 'white';
+		
+		var lineSet = activeLines[activeLine];
+
+		for (var i=0; i<lineSet.length; i++) {
+			var item1 = lineSet[i];
+			var item2 = lineSet[(i+1)%lineSet.length];
+			
+				
+				
+			canvasContext.beginPath();
+			canvasContext.moveTo(items[item1].x, items[item1].y);
+			canvasContext.lineTo(items[item2].x, items[item2].y);
+			canvasContext.stroke();
+		}
+		
+		for (i=0; i<lineSet.length; i++) {
+			drawItem(items[lineSet[i]]);
+		}
+		
+		canvasContext.shadowOffsetX = 0;
+		canvasContext.shadowOffsetY = 0;
+		canvasContext.shadowBlur = 0;
+		canvasContext.shadowColor = 'black';	
+
+		return;
+	}
+	
+
 	// draw lines first
 	// We do it this way to respect the draw order of the shapes, in case we used the shift click to bring a shape to the top.
 	for (var i=0; i<shapes.length; i++){
@@ -462,10 +499,11 @@ function drawItems() {
 				
 		// FYI: shape === food type
 		if (!shape.active && !showInactiveItems) {
-			continue;
+			continue;			
 		}
 		
-		for (var j=0; j<lines.length; j++) {			
+		for (var j=0; j<lines.length; j++) {						
+			
 			let line = lines[j];
 			
 			for (var k=0, notFound = true; k<shape.items.length && notFound; k++) {
@@ -479,7 +517,8 @@ function drawItems() {
 				continue;
 			
 									
-			if (isShowing(line.item1) && isShowing(line.item2)) {				
+			if (isShowing(line.item1) && isShowing(line.item2)) 
+			{
 				if (line.crossed) {
 					canvasContext.fillStyle = lineColors[RGB_ERROR];
 					canvasContext.strokeStyle = lineColors[RGB_ERROR];
