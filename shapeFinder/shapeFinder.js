@@ -491,7 +491,8 @@ function drawActions() {
 	canvasContext.fillText("\u2192", x + legendItemWidth - (buttonSize/2), y + textYOffset);
 	
 	y += legendItemHeight;
-	canvasContext.fillText("diff = " + Number.parseFloat(results[activeLine].delta).toFixed(4) , x + legendItemWidth/2, y + textYOffset);
+	if (activeLine >= 0 ) 
+		canvasContext.fillText("diff = " + Number.parseFloat(results[activeLine].delta).toFixed(4) , x + legendItemWidth/2, y + textYOffset);
 
 	
 	canvasContext.textAlign = 'left';
