@@ -8,10 +8,10 @@
 // Measured from the 'authoritative' image of joined kibbles
 
 var KibbleLocs = [
-	{x:849, y:300},
-	{x:593, y:498},
-	{x:661, y:389},
-	{x:791, y:473},
+	{x:898, y:696},
+	{x:896, y:969},
+	{x:971, y:810},
+	{x:1121, y:916},
 	
 	{x:849, y:300},
 	{x:1044, y:498},
@@ -31,6 +31,9 @@ const searchShapes = [
 var searchPoints = [];
 
 var searchP = [0,0];
+var searchP2 = [0,0];
+var searchP3 = [0,0];
+var searchP4 = [0,0];
 
 
 const diffDefaultIndex = 2;
@@ -85,8 +88,12 @@ function initSearchData () {
 	}
 		
 	// Build the Left/Right mirror P for the kibble shapes
+	// Someday make this generalized and shape size driven.
 	for (i=0; i<searchShapes.length; i++) {
-		searchP[i] = getP(searchShapes[i][0], searchShapes[i][1], searchShapes[i][2]);		
+		searchP[i] = getP(KibbleLocs[searchShapes[i][0]], KibbleLocs[searchShapes[i][1]], KibbleLocs[searchShapes[i][2]]);
+		searchP2[i] = getP(KibbleLocs[searchShapes[i][0]], KibbleLocs[searchShapes[i][1]], KibbleLocs[searchShapes[i][3]]);
+		searchP3[i] = getP(KibbleLocs[searchShapes[i][1]], KibbleLocs[searchShapes[i][2]], KibbleLocs[searchShapes[i][3]]);
+		searchP4[i] = getP(KibbleLocs[searchShapes[i][0]], KibbleLocs[searchShapes[i][3]], KibbleLocs[searchShapes[i][2]]);
 	}
 	
 	console.log ("point distances calculated");
@@ -218,96 +225,6 @@ function raiseSearchDiff() {
 
 //  Stored shape :  locations = [], totalDiff, rotationDelta
 
-function searchItems_old() {
-	
-	var shapeID = searchIndex;
-	
-	var baseRatio, ratio;	
-	var variance, delta;
-		
-	var searchSize = searchPoints.length;
-	
-	var shape = searchShapes[shapeID];
-	
-	var DIFF_MAX = diffValues[diffIndex];
-	
-	results = [];
-	
-	
-	// I should rework this as a recursive function.
-	
-	// We consider AB and BA as separate searches, because the shape could go in either direction and it's fast enough to check.	
-	for (var A=0; A<searchSize; A++) {
-		for (var B=0; B<searchSize; B++) {
-		
-			if (A == B) 
-				continue;
-			
-			
-			baseRatio = distances[searchPoints[A].locID][searchPoints[B].locID] / shapeDistances[shape[0]][shape[1]];
-			variance = 0;
-						
-			for (var C=0; C<searchSize; C++) {
-				if (C == A || C == B) 
-					continue;
-				
-				ratio = distances[searchPoints[A].locID][searchPoints[C].locID] / shapeDistances[shape[0]][shape[2]];
-				delta = Math.abs(ratio - baseRatio);
-				if (delta > DIFF_MAX) 
-					continue;
-				variance = delta;
-								
-				ratio = distances[searchPoints[B].locID][searchPoints[C].locID] / shapeDistances[shape[1]][shape[2]];
-				delta = Math.abs(ratio - baseRatio);
-				if (delta > DIFF_MAX) 
-					continue;
-				if (delta > variance)
-					//variance = delta;
-					continue;
-				
-				if (getP(KaraLocations[searchPoints[A].locID], KaraLocations[searchPoints[B].locID], KaraLocations[searchPoints[C].locID]) != searchP[shapeID]) {
-					continue;
-				}
-				
-				
-				for (var D=0; D<searchSize; D++) {
-					if (D == A || D == B || D == C) 
-						continue;
-					
-					ratio = distances[searchPoints[A].locID][searchPoints[D].locID] / shapeDistances[shape[0]][shape[3]];
-					delta = Math.abs(ratio - baseRatio);
-					if (delta > DIFF_MAX) 
-						continue;
-					if (delta > variance)
-						//variance = delta;
-						continue;
-
-					ratio = distances[searchPoints[B].locID][searchPoints[D].locID] / shapeDistances[shape[1]][shape[3]];
-					delta = Math.abs(ratio - baseRatio);
-					if (delta > DIFF_MAX) 
-						continue;
-					if (delta > variance)
-						//variance = delta;
-						continue;
-					ratio = distances[searchPoints[C].locID][searchPoints[D].locID] / shapeDistances[shape[2]][shape[3]];
-					delta = Math.abs(ratio - baseRatio);
-					if (delta > DIFF_MAX) 
-						continue;
-					if (delta > variance)
-						//variance = delta;
-						continue;
-						
-					push_shape(A, B, C, D, delta);
-				}				
-			}
-		}
-	}
-	
-	if (results.length) {
-		results.sort(compare);
-	}
-}
-
 
 function searchItems() {
 	
@@ -328,6 +245,7 @@ function searchItems() {
 	// I should rework this as a recursive function.
 	
 	// We consider AB and BA as separate searches, because the shape could go in either direction and it's fast enough to check.	
+	// variance will be the max delta in the ratio of the shape.
 	for (var A=0; A<searchSize; A++) {
 		for (var B=0; B<searchSize; B++) {
 		
@@ -384,8 +302,20 @@ function searchItems() {
 						continue;
 					if (delta > variance)
 						variance = delta;
+
+					if (getP(KaraLocations[searchPoints[A].locID], KaraLocations[searchPoints[B].locID], KaraLocations[searchPoints[D].locID]) != searchP2[shapeID]) {
+						continue;
+					}
 										
-					push_shape(A, B, C, D, delta);
+					if (getP(KaraLocations[searchPoints[B].locID], KaraLocations[searchPoints[C].locID], KaraLocations[searchPoints[D].locID]) != searchP3[shapeID]) {
+						continue;
+					}
+					
+					if (getP(KaraLocations[searchPoints[A].locID], KaraLocations[searchPoints[D].locID], KaraLocations[searchPoints[C].locID]) != searchP4[shapeID]) {
+						continue;
+					}
+					
+					push_shape(A, B, C, D, variance);
 				}				
 			}
 		}

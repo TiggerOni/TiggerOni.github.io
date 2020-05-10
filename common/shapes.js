@@ -444,6 +444,7 @@ function drawShapes() {
 	canvasContext.shadowColor = 'black';
 }
 
+var activeLineColors = ['yellow', 'green', 'blue', 'purple', 'red', 'orange', 'white', 'black'];
 
 // This is the new and shiny way to draw nodes and lines.
 function drawItems() {
@@ -464,15 +465,16 @@ function drawItems() {
 		
 		canvasContext.fillStyle = 'white';
 		canvasContext.strokeStyle = 'white';
-		
+
 		var lineSet = activeLines[activeLine];
 
 		for (var i=0; i<lineSet.length; i++) {
 			var item1 = lineSet[i];
 			var item2 = lineSet[(i+1)%lineSet.length];
 			
-				
-				
+			canvasContext.fillStyle = activeLineColors[i];
+			canvasContext.strokeStyle = activeLineColors[i];
+			
 			canvasContext.beginPath();
 			canvasContext.moveTo(items[item1].x, items[item1].y);
 			canvasContext.lineTo(items[item2].x, items[item2].y);
@@ -482,6 +484,7 @@ function drawItems() {
 		for (i=0; i<lineSet.length; i++) {
 			drawItem(items[lineSet[i]]);
 		}
+
 		
 		canvasContext.shadowOffsetX = 0;
 		canvasContext.shadowOffsetY = 0;
