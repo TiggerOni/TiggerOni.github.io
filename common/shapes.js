@@ -748,13 +748,14 @@ function updateItems() {
 	if (!moving) {
 		return;
 	}
-
+	
 	if (item1) {
 		item1.x += dx;
 		item1.y += dy;
 		item1.scale -= dScale;
-		
-		if (Math.abs(item1.x - locations[item1.targetLocID].x) < Math.abs(dx) ) {
+				
+		if (((dx > dy) && Math.abs(item1.x - locations[item1.targetLocID].x) < Math.abs(dx)) 
+				|| Math.abs(item1.y - locations[item1.targetLocID].y) < Math.abs(dy)) {
 			item1.x = locations[item1.targetLocID].x;
 			item1.y = locations[item1.targetLocID].y;
 			item1.currLocID = item1.targetLocID;
@@ -769,7 +770,8 @@ function updateItems() {
 		item2.y -= dy;
 		item2.scale -= dScale;
 		
-		if (Math.abs(item2.x - locations[item2.targetLocID].x) < Math.abs(dx)) {
+		if (((dx > dy) && Math.abs(item2.x - locations[item2.targetLocID].x) < Math.abs(dx)) 
+				|| Math.abs(item2.y - locations[item2.targetLocID].y) < Math.abs(dy)) {
 			item2.x = locations[item2.targetLocID].x;
 			item2.y = locations[item2.targetLocID].y;
 			item2.currLocID = item2.targetLocID;
