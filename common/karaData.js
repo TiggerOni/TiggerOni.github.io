@@ -178,8 +178,15 @@ var KaraLocations = [
 { x:1074+5, y:276+5, layer:SERVANT },	/* Servants */ 
 { x:1099+5, y:171+5, layer:GUEST },		/* Guest */ 	
 
-];
+// Bosses	3x3
+{ x:648, y:460, layer:BANQUET }, 		/* Moroes */
+{ x:411, y:271, layer:GUEST },			/* Opera */
+{ x:672, y:815, layer:MENAGERIE },		/* Curator */ 	
+{ x:744, y:763, layer:SERVANT },		/* Huntsman */ 
+{ x:1118, y:380, layer:GUEST },			/* Maiden */ 	
+	
 
+];
 
 
 // Note: since we stored all the images in sequence, id for shape is the same for graphic and array index.
@@ -309,32 +316,18 @@ var KaraItems = [
 	{id:CRYSTALS, startLocID:92, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:CRYSTALS, startLocID:93, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 	{id:CRYSTALS, startLocID:94, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	
-// Skeletons	
-// Mace: I didn't update these because the data was pulled from Llanthta's map, and it uses a different coordinate system.
-// When I updated my maps, I didn't have that data at that time.
-/*
-	{id:SKELETONS, startLocID:95, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:96, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:97, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	
-	{id:SKELETONS, startLocID:98, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:99, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:100, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	
-	{id:SKELETONS, startLocID:101, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:102, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:103, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:104, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:105, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
 
-	{id:SKELETONS, startLocID:106, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:107, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:108, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:109, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-	{id:SKELETONS, startLocID:110, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
-*/	
+	
+// Bosses
+	{id:BOSSES, startLocID:95, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:BOSSES, startLocID:96, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:BOSSES, startLocID:97, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:BOSSES, startLocID:98, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+	{id:BOSSES, startLocID:99, currLocID:-1, targetLocID:-1, scale:0.5, x:0, y:0},
+
 ];
+
+	
 
 
 var KaraShapes = [
@@ -392,10 +385,10 @@ var KaraShapes = [
 //Crystals
 	{items:[90, 91, 92, 93, 94], lines:[], lineColor:RGB_LAVENDER, defaultActive: true, active:false, desc:22},
 
+//Bosses
+	{items:[95, 96, 97, 98, 99], lines:[], lineColor:RGB_DARK_RED, defaultActive: true, active:true, desc:23},
 
-//Skeletons
-//	{items:[95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110], lines:[], 
-//			lineColor:RGB_WHITE, defaultActive: false, active:false, desc:23},
+
 ];
 
 

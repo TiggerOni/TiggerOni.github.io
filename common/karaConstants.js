@@ -51,7 +51,8 @@ const BUNCH_BERRIES = 19;
 const PEDESTALS = 20;
 const KIBBLES = 21;
 const CRYSTALS = 22;
-const SKELETONS = 23;
+
+const BOSSES = 23;
 
 // Order of item names is the same as the ItemID list.
 var ItemNames = [
@@ -82,7 +83,7 @@ var ItemNames = [
 	"Pedestals",
 	"Kibbles",
 	"Crystals",
-	"Skeletons",
+	"Bosses",
 ];
 
 var lineColors = [
@@ -95,9 +96,11 @@ var lineColors = [
 	'rgb(128, 0, 255)',			// lavender	
 	'rgb(255, 255, 255)',		// white
 	'rgba(0,0,0,0)',			// transparent
+	'rgb(160, 0, 0)',			// dark red
 ];
 
 const RGB_ERROR = 0;
+const RGB_RED = 0;
 const RGB_PALE_BLUE = 1;
 const RGB_PALE_PINK = 2;
 const RGB_PALE_CYAN = 3;
@@ -106,3 +109,4 @@ const RGB_PALE_ORANGE = 5;
 const RGB_LAVENDER = 6;
 const RGB_WHITE = 7;
 const RGB_TRANSPARENT = 8;
+const RGB_DARK_RED = 9;
