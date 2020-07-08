@@ -95,7 +95,7 @@ function keyPressed(evt) {
 	} else if (evt.keyCode == 77) { 	// m
 		
 		active = !shapes[SLATHERED_RIB].active;
-		
+
 		setShapeActive( SLATHERED_RIB, active );
 		setShapeActive( MEATY_MORSEL, active );
 		setShapeActive( MARBLED_STEAK, active );
@@ -143,66 +143,102 @@ function keyPressed(evt) {
 
 	
 	
-function testFoodUI(mx, my, shiftKey) {
-	
-	var y = legendFoodY;
+function getFoodUI(mx, my) {
 	var x = legendFoodX;
-	
-		
+	var y = legendFoodY;
+
 	for (var i=0; i<shapes.length; i++) {
 		if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
-		
-			if (shiftKey) {
-				moveShapeToFront(i);
-			} else {
-				toggleShape(i);
-			}
-			updateShapes();
-
-			return true;
+			return i;
 		}
-				
-		
 		y += legendItemHeight;
 	}
-	
+
+	return null;
+}
+
+
+
+function testFoodUI(mx, my, shiftKey){
+    var food = getFoodUI(mx, my)
+	// food can === 0 here, so we must explicitly check for null
+	if (food !== null) {
+        if (shiftKey) {
+            moveShapeToFront(food);
+        }
+        else {
+            toggleShape(food);
+        }
+        updateShapes();
+        return true;
+	}
 	return false;
 }
 
-function testMapUI(mx, my, shiftKey) {
-		
+
+
+function getMapUI(mx, my) {
 	var x = legendMapX;
 	var y = legendMapY;
 	
 	for (var i=0; i<maps.length; i++) {
 		if (mx >= x && mx <= x + legendItemWidth && my >= y  && my <= y + legendItemHeight) {
-			maps[i].visible = !maps[i].visible;
-			return true;
+		    return maps[i]
 		}
 		y += legendItemHeight * mapUIOffset;
 	}
 	
+	return null;
+}
+
+
+
+function testMapUI(mx, my) {
+    var map = getMapUI(mx, my)
+	if (map) {
+	    map.visible = !map.visible;
+	    return true;
+	}
 	return false;
 }
-	
+
+
 
 function testUIClick(mx, my, shiftKey) {
-	
-	if (testFoodUI(mx, my, shiftKey)	
-			|| testOptionsUI(mx, my, shiftKey)	
-			|| testMapUI(mx, my, shiftKey)) {
+
+	if (testFoodUI(mx, my, shiftKey)
+            || testOptionsUI(mx, my)
+			|| testMapUI(mx, my)) {
 		return true;
 	}
-	
+
 	return false;
 }
 
-	
+
+
+function cursorOnClickableElement(x, y) {
+    return getFoodUI(x, y) != null
+        || getOptionsUI(x, y) != null
+        || getMapUI(x, y) != null
+        || getItem(x, y) != null;
+}
+
+
+
 function moveMouse(evt) {		
 	// We update the mouseXY here because key presses don't track cursor/mouse 
 	// location and sometimes we want to know where the mouse is.
 	mouseX	=	evt.pageX;
 	mouseY	=	evt.pageY;
+
+    // Change cursor when hovering over clickable elements
+	if(cursorOnClickableElement(mouseX / appScale, mouseY / appScale)) {
+	    changeCursor(true);
+	}
+	else {
+	    changeCursor(false);
+	}
 }
 
 
@@ -227,7 +263,7 @@ function clickMouse(evt) {
 	if (testUIClick(mouseX, mouseY, evt.shiftKey)) {
 		updateOptions();
 	} else {
-		testItemClick(mouseX, mouseY, evt.shiftKey);	
+		testItemClick(mouseX, mouseY, evt.shiftKey);
 	}
 }
 

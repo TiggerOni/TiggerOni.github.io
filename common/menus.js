@@ -31,7 +31,7 @@ var actionsY = 400;
 
 
 function highlight(x, y, w, h) {
-	
+
 	canvasContext.fillStyle = "gray";	
 	canvasContext.fillRect(x, y, w, h);
 	
@@ -128,22 +128,30 @@ function drawOptionsLegend() {
 	}
 }
 
-function testOptionsUI (mx, my, shiftKey) {
-	
+function getOptionsUI(mx, my) {
 	var x = legendOptionsX;
 	var y = legendOptionsY;
-	
+
 	for (var i=0; i<options.length; i++) {
-		if (mx >= x && mx <= x + legendItemWidth && my >= y  && my <= y + legendItemHeight) {		
-			options[i].value = !options[i].value;
-			return true;			
+		if (mx >= x && mx <= x + legendItemWidth && my >= y  && my <= y + legendItemHeight) {
+			return options[i];
 		}
-		
 		y += legendItemHeight * optionsOffset;
-	}		
-	return false;
+	}
+
+	return null;
 }	
 
+function testOptionsUI(mx, my) {
+    var options = getOptionsUI(mx, my);
+
+    if (options) {
+        options.value = !options.value;
+        return true
+    }
+
+    return false
+}
 
 
 function drawMapLegend() {

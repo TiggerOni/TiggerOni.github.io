@@ -608,17 +608,12 @@ function getItemShape(itemID) {
 
 var moving = false;
 
-function testItemClick(x, y, shiftKey) {
-	
-	// Don't allow clicking if we're in the middle of swapping points.
-	if (moving)
-		return;
+function getItem(x, y) {
 	
 	// Normalize clicks for board offsets/scaling/etc...
 	var halfItemSize;
 	var shapeID;
-	
-	
+
 	for (var i=shapeOrder.length-1; i>=0; i--) {
 		let shape = shapes[shapeOrder[i]];
 		
@@ -632,18 +627,34 @@ function testItemClick(x, y, shiftKey) {
 				|| y <= item.y - halfItemSize || y >= item.y + halfItemSize)
 			{
 				continue;
-			}			
-						
-			if (shiftKey) {
-				shapeOrder.push(shapeOrder.splice(i, 1)[0]);				
-				return;
 			}
 			
 			if (!isShowing(itemID)) {
 				continue;
 			}
-									
-			if (selectedItem1 == itemID) {
+
+			return itemID
+		}
+	}
+	return null;
+}
+
+function testItemClick(x, y, shiftKey) {
+
+    // Don't allow clicking if we're in the middle of swapping points.
+	if (moving)
+		return;
+
+    var itemID = getItem(x, y)
+	if (itemID) {
+	    var item = items[itemID];
+        if (shiftKey) {
+            var i = shapeOrder.indexOf(item.id)
+            shapeOrder.push(shapeOrder.splice(i, 1)[0]);
+            return;
+        }
+        else {
+            if (selectedItem1 == itemID) {
 				items[selectedItem1].scale = scaleNormal;
 				selectedItem1 = -1;
 				if (selectedItem2 >= 0) {
@@ -666,13 +677,12 @@ function testItemClick(x, y, shiftKey) {
 				selectedItem2 = selectedItem1;
 				selectedItem1 = itemID;
 				item.scale = scaleSelected;
-				
+
 				if (leyLineMode) {
 					swapSelectedItems();
 				}
-			} 				
-			break;
-		}
+			}
+        }
 	}
 }
 
