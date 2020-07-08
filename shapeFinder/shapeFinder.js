@@ -180,51 +180,68 @@ function keyPressed(evt) {
 
 	
 	
-function testFoodUI(mx, my, shiftKey) {
-	
-	var y = legendFoodY;
+function getFoodUI(mx, my) {
 	var x = legendFoodX;
-	
-		
+	var y = legendFoodY;
+
 	for (var i=0; i<shapes.length; i++) {
 		if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
-		
-			if (shiftKey) {
-				moveShapeToFront(i);
-			} else {
-				toggleShape(i);
-			}
-			updateShapes();
-
-			return true;
+			return i;
 		}
-				
-		
 		y += legendItemHeight;
 	}
-	
+
+	return null;
+}
+
+
+
+function testFoodUI(mx, my, shiftKey){
+    var food = getFoodUI(mx, my)
+	// food can === 0 here, so we must explicitly check for null
+	if (food !== null) {
+        if (shiftKey) {
+            moveShapeToFront(food);
+        }
+        else {
+            toggleShape(food);
+        }
+        updateShapes();
+        return true;
+	}
 	return false;
 }
 
-function testMapUI(mx, my, shiftKey) {
-		
+
+
+function getMapUI(mx, my) {
 	var x = legendMapX;
 	var y = legendMapY;
-	
+
 	for (var i=0; i<maps.length; i++) {
 		if (mx >= x && mx <= x + legendItemWidth && my >= y  && my <= y + legendItemHeight) {
-			maps[i].visible = !maps[i].visible;
-			return true;
+		    return maps[i]
 		}
 		y += legendItemHeight * mapUIOffset;
 	}
-	
+
+	return null;
+}
+
+
+
+function testMapUI(mx, my) {
+    var map = getMapUI(mx, my)
+	if (map) {
+	    map.visible = !map.visible;
+	    return true;
+	}
 	return false;
 }
-	
+
+
 
 function testUIClick(mx, my, shiftKey) {
-	
 	if (testFoodUI(mx, my, shiftKey)	
 			|| testOptionsUI(mx, my, shiftKey)	
 			|| testMapUI(mx, my, shiftKey)) {
@@ -234,12 +251,30 @@ function testUIClick(mx, my, shiftKey) {
 	return false;
 }
 
-	
+
+
+function cursorOnClickableElement(x, y) {
+    return getFoodUI(x, y) != null
+        || getOptionsUI(x, y) != null
+        || getMapUI(x, y) != null
+        || getActions(x, y) != null;
+}
+
+
+
 function moveMouse(evt) {		
 	// We update the mouseXY here because key presses don't track cursor/mouse 
 	// location and sometimes we want to know where the mouse is.
 	mouseX	=	evt.pageX;
 	mouseY	=	evt.pageY;
+
+	// Change cursor when hovering over clickable elements
+	if(cursorOnClickableElement(mouseX / appScale, mouseY / appScale)) {
+	    changeCursor(true);
+	}
+	else {
+	    changeCursor(false);
+	}
 }
 
 
@@ -498,56 +533,78 @@ function drawActions() {
 	canvasContext.textAlign = 'left';
 }
 
-function testActions(mx, my) {
-	
-	var x = searchX;
+function getActions(mx, my) {
+    var x = searchX;
 	var y = searchY;
-	
+
 	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
-		resetSearch();
-		return true;
+		return "reset";
 	}
 	y += legendItemHeight;
 	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
-		searchForLeftKibbleShape();		
-		return true;
+		return "leftKibble";
 	}
 	y += legendItemHeight;
 	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
-		searchForRightKibbleShape();		
-		return true;
+		return "rightKibble";
 	}
 	y += legendItemHeight;
 
 	y += legendItemHeight * 2;
-	
+
 	var buttonSize = legendItemHeight;
-	
+
 	if (mx >= x && mx <= x + buttonSize && my >= y && my <= y + buttonSize) {
-		lowerSearchDiff();
-		return true;
+		return "lowerSearch";
 	}
-	
+
 	if (mx >= x + legendItemWidth - buttonSize && mx <= x + legendItemWidth && my >= y && my <= y + buttonSize) {
-		raiseSearchDiff();
-		return true;
-	}		
+	    return "raiseSearch";
+	}
 
 
 	if (searchIndex != NO_SEARCH) {
 		y += legendItemHeight * 3;
-			
+
 		if (mx >= x && mx <= x + buttonSize && my >= y && my <= y + buttonSize) {
-			decrementSearch();
-			return true;
+			return "decrementSearch";
 		}
-		
+
 		if (mx >= x + legendItemWidth - buttonSize && mx <= x + legendItemWidth && my >= y && my <= y + buttonSize) {
-			incrementSearch();
-			return true;
-		}		
+			return "incrementSearch"
+		}
 	}
-	
+
+	return null;
+}
+
+function testActions(mx, my) {
+    var action = getActions(mx, my)
+	if (action) {
+        switch(action){
+            case "reset":
+                resetSearch();
+                return true;;
+            case "leftKibble":
+                searchForLeftKibbleShape();
+                return true;;
+            case "rightKibble":
+                searchForRightKibbleShape();
+                return true;;
+            case "lowerSearch":
+                lowerSearchDiff();
+                return true;;
+            case "raiseSearch":
+                raiseSearchDiff();
+                return true;;
+            case "decrementSearch":
+                decrementSearch();
+                return true;;
+            case "incrementSearch":
+                incrementSearch();
+                return true;;
+        }
+	}
 	return false;
 }
 
