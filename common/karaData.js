@@ -47,7 +47,7 @@ var KaraLocations = [
 
 // Dusty Bun	7x7
 { x:801+3, y:160+3, layer:GUEST },
-{ x:521+3, y:240+3, layer:GUEST },
+{ x:521+3, y:232+3, layer:GUEST },
 { x:637+3, y:519+3, layer:BANQUET },
 { x:792+3, y:585+3, layer:ENTRANCE },
 
@@ -67,7 +67,7 @@ var KaraLocations = [
 // Slathered Rib
 { x:1068+4, y:252+5, layer:SERVANT },	// 9x11
 { x:736+4, y:448+4, layer:BANQUET },	// 9x9
-{ x:743+4, y:443+4, layer:BANQUET },	// 9x9
+{ x:743+4, y:445+4, layer:BANQUET },	// 9x9
 { x:701+4, y:732+4, layer:KITCHEN },	// 9x9
 
 // Meaty Morsel	11x11
@@ -84,11 +84,11 @@ var KaraLocations = [
 // Juicy Drumstick	9x9
 { x:1103+4, y:219+4, layer:GUEST },
 { x:1138+4, y:302+4, layer:GUEST },
-{ x:694+4, y:474+4, layer:BANQUET },
+{ x:698+4, y:474+4, layer:BANQUET },
 { x:772+4, y:726+4, layer:SERVANT },
 
 // Fishy Bits	15x13
-{ x:674+7, y:440+6, layer:BANQUET },
+{ x:674+7, y:437+6, layer:BANQUET },
 { x:904+7, y:650+6, layer:KITCHEN },
 { x:956+7, y:246+6, layer:GUEST },
 { x:618+7, y:291+6, layer:ENTRANCE },
@@ -107,10 +107,10 @@ var KaraLocations = [
 { x:786+5, y:754+5, layer:KITCHEN },
 
 //Karaweizen	7x7
-{ x:508+3, y:297+3, layer:GUEST },
+{ x:522+3, y:297+3, layer:GUEST },
 { x:449+3, y:238+3, layer:GUEST },
 { x:854+3, y:528+3, layer:BANQUET },
-{ x:1055+3, y:421+3, layer:GUEST },
+{ x:1050+3, y:416+3, layer:GUEST },
 
 //Hoppy Mead
 { x:642+3, y:246+3, layer:BALCONY },	// 7x7
@@ -138,13 +138,13 @@ var KaraLocations = [
 { x:687+4, y:777+4, layer:KITCHEN },	// 9x9
 
 // Lost Watermelon	7x7
-{ x:631+3, y:313+3, layer:SERVANT },	
+{ x:628+3, y:313+3, layer:SERVANT },	
 { x:771+3, y:646+3, layer:SERVANT },
 { x:320+3, y:288+3, layer:GUEST },
 { x:1180+3, y:336+3, layer:GUEST },
 
 // Hidden Banana
-{ x:617+3, y:233+3, layer:BALCONY },	// 7x7
+{ x:617+3, y:235+3, layer:BALCONY },	// 7x7
 { x:686+4, y:451+4, layer:ENTRANCE },	// 9x9
 { x:684+4, y:508+4, layer:BANQUET },	// 9x9
 { x:940+4, y:605+4, layer:KITCHEN },	// 9x9

@@ -444,7 +444,7 @@ var creditText = [
 	"",
 	"Maps by TiggerOni and Llanthta",
 	"",
-	"Credit due to whoever made the original map.",
+	"Credit to Life of Lag, Loa of Latency for the original map.",
 	"",
 	"",
 	"Part of the WoW secrets Jenefur discord group.",
