@@ -17,9 +17,10 @@ var scaleNormal = 0.50;
 var scaleSelected = 0.75;
 
 
-const appWidth = 1600;
-const appHeight = 1100;
-const appRatio = (appWidth/appHeight);
+// Converted to var from const so individual apps can override.
+var appWidth = 1600;
+var appHeight = 1100;
+var appRatio = (appWidth/appHeight);
 
 
 // ItemIDs
@@ -53,6 +54,17 @@ const KIBBLES = 21;
 const CRYSTALS = 22;
 
 const BOSSES = 23;
+
+
+const MENAGERIE = 0;
+const UPPER_STAIR = 1;
+const LOWER_STAIR = 2;
+const ENTRANCE = 3;
+const BALCONY = 4;
+const GUEST = 5;
+const BANQUET = 6;
+const KITCHEN = 7;
+const SERVANT = 8;
 
 // Order of item names is the same as the ItemID list.
 var ItemNames = [

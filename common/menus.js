@@ -93,6 +93,7 @@ var options = [
 
 function setOptions(list) {
 	options = list;
+	updateOptions();
 }
 
 function resetOptions() {
@@ -215,6 +216,11 @@ function showTextPanel ( text ) {
 	canvasContext.strokeStyle = "black";
 	canvasContext.rect(panelX+1, panelY+1, panelWidth-2, panelHeight-2);
 	canvasContext.stroke();	
+}
+
+function setTipsOffset(x, y) {
+	tipsX = x;
+	tipsY = y;
 }
 
 

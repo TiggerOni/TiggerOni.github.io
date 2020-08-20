@@ -6,16 +6,6 @@
 const mapXOffset = 300;
 const mapYOffset = -50;
 
-const MENAGERIE = 0;
-const UPPER_STAIR = 1;
-const LOWER_STAIR = 2;
-const ENTRANCE = 3;
-const BALCONY = 4;
-const GUEST = 5;
-const BANQUET = 6;
-const KITCHEN = 7;
-const SERVANT = 8;
-
 const MAP_COUNT = 9;
 
 var maps = [];

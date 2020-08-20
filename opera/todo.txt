@@ -1,0 +1,63 @@
+opera todos:
+
+add grid
+	add file
+	class grid
+		draw
+		initialize
+		add item
+		get location
+		remove item
+		
+		
+	need a grid	
+		points on the screen
+		similar to locations
+		grid stores items
+		can drag item onto it
+		can snap item to node
+		
+		can test for drop, and return
+		
+	list of items
+		
+	
+	
+	item:
+		type
+		id		
+		x, y (on screen)
+		gx, gy
+		
+		
+	two grids?
+		one for opera, one for storage icons?  No.
+		
+		
+		
+	Item:
+		Created
+		Placed next to the legend
+		Shows up if the legend for that food is active
+		Has a home location.
+		Can be picked up, dragged, and dropped.
+			On Drop:
+				Is the food on the grid?
+					Nearest grid location to target
+					get target x, y
+					zoom to target
+				else
+					get home x, y to target
+					zoom to target
+					
+		Zoom to target
+			Calculate delta per frame
+			Move item on delta per frame
+			Once close enough, set x, y to target x, y and stop zoom
+			
+		Add option to allow more than one food on a grid location
+		
+					
+		
+		
+	

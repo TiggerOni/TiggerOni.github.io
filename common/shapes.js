@@ -118,6 +118,9 @@ var selectedItem2 = -1;
 var allowInactiveSwaps = true;
 var leyLineMode = false;
 
+// Global for access to icon strip
+var showIcons = false;
+
 
 var activeLines = [];	// This will be a list of arrays of items.  Connect the first and last item.  Used by the search routine to report results.
 var activeLine = -1;
@@ -143,6 +146,8 @@ function initKaraData () {
 	
 	console.log("kara data initialized");
 }
+
+
 
 function rebuildLines() {
 	
@@ -382,9 +387,13 @@ function drawItem (item) {
 		}
 	}
 
-
-	canvasContext.drawImage(symbolImg, 0, shapeHeight*item.id, shapeWidth, shapeHeight,
+	if (showIcons && iconImg) {
+		canvasContext.drawImage(iconImg, 0, shapeHeight*item.id, shapeWidth, shapeHeight,
 			x - shapeOffset, y-shapeOffset , shapeSize, shapeSize);		
+	} else {
+		canvasContext.drawImage(symbolImg, 0, shapeHeight*item.id, shapeWidth, shapeHeight,
+			x - shapeOffset, y-shapeOffset , shapeSize, shapeSize);		
+	}
 			
 	canvasContext.globalAlpha = 1.0;		
 }
