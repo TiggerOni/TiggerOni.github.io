@@ -11,7 +11,7 @@ var tipsText = [
 
 var helpText = [
 	"Interactive Karazhan Map app by TiggerOni.",
-	"v2.0",
+	"v2.1",
 	"These foods are visible in Return to Karazhan if you've talked to Amara Lunastar.",
 	"All foods, map layers, and items shown are from RtK in their best known locations.",
 	"",
@@ -33,7 +33,7 @@ var helpText = [
 
 var creditText = [
 	"Karazhan Map app",
-	"v2.0",
+	"v2.1",
 	"",
 	"Programmed by TiggerOni",
 	"",

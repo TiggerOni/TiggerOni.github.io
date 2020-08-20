@@ -1,9 +1,14 @@
-// leylines.js
+// shapeMaker.js
 //
 // Part of the KaraFood.io food app for Karazhan.
 // Written by TiggerOni
 // For the Jenafur project for the Wow Secrets Discord.
 // All rights reserved.
+
+// Note: this app was the original app created.  When the new framework was set up, this app was preserved seperately.
+// It has its own assets and logic separate from the main app suite.
+// Plus I kept it as a reminder of how my code has changed.  This app doesn't auto scale like the others.
+
 
 var canvas;
 var canvasContext;

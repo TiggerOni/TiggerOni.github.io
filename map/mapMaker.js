@@ -12,8 +12,10 @@ var clickedShape = null;
 
 var bgImg;
 var symbolImg;
+var iconImg;
 
 var framesPerSecond = 30;
+
 
 
 
@@ -37,6 +39,7 @@ const SHOW_INACTIVE_LAYERS = 1;
 const SHOW_INACTIVE_ITEMS = 2;
 const SHOWING_HELP = 3;
 const SHOWING_CREDITS = 4;
+const SHOWING_ICONS = 5;
 
 var optionList = [
 	{ text:"Attach Food to Layers", value: true, default: true },
@@ -44,6 +47,7 @@ var optionList = [
 	{ text:"Show Inactive Items", value: false, default: false },
 	{ text:"Show Help", value: true, default: false },
 	{ text:"Show Credits", value: false, default: false },
+	{ text:"Show Icons/Shapes", value: true, default: true },
 ];
 
 function updateOptions() {
@@ -52,6 +56,7 @@ function updateOptions() {
 	showInactiveItems = optionList[SHOW_INACTIVE_ITEMS].value;
 	showInactiveLayers = optionList[SHOW_INACTIVE_LAYERS].value;
 	attachFoodToLayers = optionList[ATTACH_FOOD_TO_LAYERS].value;
+	showIcons = optionList[SHOWING_ICONS].value;
 }
 
 
@@ -269,6 +274,8 @@ function clickMouse(evt) {
 
 
 var bgLoaded = false;
+var symbolsLoaded = false;
+var iconsLoaded = false;
 
 window.onload = function() {
 	canvas = document.getElementById('gameCanvas');	
@@ -299,17 +306,32 @@ window.onload = function() {
 	symbolImg = new Image();
 	symbolImg.src = '../common/symbolSheet.png';
 	symbolImg.style.backgroundColor = 'transparent'; 
-	
-	symbolImg.onload = function() {			
-		resetShapes();   
+
+	symbolImg.onload = function() {		
+		symbolsLoaded = true;
 		console.log("Symbols loaded...");
+		loaded();
+	};
+	
+	iconImg = new Image();
+	iconImg.src = '../common/iconSheet.png';
+	iconImg.style.backgroundColor = 'transparent'; 
+
+	iconImg.onload = function() {
+		iconsLoaded = true;
+		console.log("Icons loaded...");
+		loaded();
+	};
+}
+
+function loaded () {
+	if ( symbolsLoaded && iconsLoaded ) {
+		resetShapes();   
 		setInterval(function() {
 			drawEverything(); 
 		}, 1000/framesPerSecond);
-	};
-
+	}
 }
-
 
 function resizeCanvas() {
 		
@@ -341,8 +363,13 @@ function drawSprite (id, scale, x, y) {
 	var shapeSize = shapeWidth * scale;
 	var shapeOffset = shapeSize >> 1;
 
-	canvasContext.drawImage(symbolImg, 0, shapeHeight*id, shapeWidth, shapeHeight, 		
+	if (showIcons && iconImg) {
+		canvasContext.drawImage(iconImg, 0, shapeHeight*id, shapeWidth, shapeHeight, 		
 			x - shapeOffset, y-shapeOffset, shapeSize, shapeSize);		
+	} else {
+		canvasContext.drawImage(symbolImg, 0, shapeHeight*id, shapeWidth, shapeHeight, 		
+			x - shapeOffset, y-shapeOffset, shapeSize, shapeSize);		
+	}
 }
 
 	
@@ -356,7 +383,7 @@ function drawEverything() {
 		canvasContext.drawImage(bgImg, 0, 0);
 	}
 	
-	if (!symbolImg) {
+	if (!symbolImg || !iconImg) {
 		return;
 	}
 

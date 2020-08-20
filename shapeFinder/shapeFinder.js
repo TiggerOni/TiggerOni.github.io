@@ -12,6 +12,7 @@ var clickedShape = null;
 
 var bgImg;
 var symbolImg;
+var iconImg;
 
 var framesPerSecond = 30;
 
@@ -37,17 +38,21 @@ var showInactiveLayers = false;
 const ATTACH_FOOD_TO_LAYERS = 0;
 const SHOWING_HELP = 1;
 const SHOWING_CREDITS = 2;
+const SHOWING_ICONS = 3;
+
 
 var optionList = [
 	{ text:"Attach Food to Layers", value: true, default: true },
 	{ text:"Show Help", value: true, default: false },
 	{ text:"Show Credits", value: false, default: false },
+	{ text:"Show Icons/Shapes", value: false, default: false },
 ];
 
 function updateOptions() {
 	showingCredits = optionList[SHOWING_CREDITS].value;
 	showingHelp = optionList[SHOWING_HELP].value;
 	attachFoodToLayers = optionList[ATTACH_FOOD_TO_LAYERS].value;
+	showIcons = optionList[SHOWING_ICONS].value;
 }
 
 
@@ -363,15 +368,31 @@ window.onload = function() {
 	symbolImg = new Image();
 	symbolImg.src = '../common/symbolSheet.png';
 	symbolImg.style.backgroundColor = 'transparent'; 
-	
-	symbolImg.onload = function() {			
-		resetShapes();   
+
+	symbolImg.onload = function() {		
+		symbolsLoaded = true;
 		console.log("Symbols loaded...");
+		loaded();
+	};
+	
+	iconImg = new Image();
+	iconImg.src = '../common/iconSheet.png';
+	iconImg.style.backgroundColor = 'transparent'; 
+
+	iconImg.onload = function() {
+		iconsLoaded = true;
+		console.log("Icons loaded...");
+		loaded();
+	};
+}
+
+function loaded () {
+	if ( symbolsLoaded && iconsLoaded ) {
+		resetShapes();   
 		setInterval(function() {
 			drawEverything(); 
 		}, 1000/framesPerSecond);
-	};
-
+	}
 }
 
 

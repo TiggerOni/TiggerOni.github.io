@@ -27,6 +27,8 @@ const ALLOW_INACTIVE_SWAPS = 1;
 const SHOW_INACTIVE_ITEMS = 2;
 const SHOWING_HELP = 3;
 const SHOWING_CREDITS = 4;
+const SHOWING_ICONS = 5;
+
 
 var optionList = [
 	{ text:"Show Map", value: true, default: true },
@@ -34,6 +36,7 @@ var optionList = [
 	{ text:"Show Inactive Items", value: false, default: false },
 	{ text:"Show Help", value: true, default: false },
 	{ text:"Show Credits", value: false, default: false },
+	{ text:"Show Icons/Shapes", value: false, default: false },
 ];
 
 function updateOptions() {
@@ -42,11 +45,14 @@ function updateOptions() {
 	showingMap = optionList[SHOWING_MAP].value;
 	showInactiveItems = optionList[SHOW_INACTIVE_ITEMS].value;
 	allowInactiveSwaps = optionList[ALLOW_INACTIVE_SWAPS].value;
+	showIcons = optionList[SHOWING_ICONS].value;
+
 }
 
 
 var bgImg;
 var symbolImg;
+var iconImg;
 
 var boardWidth, boardHeight;
 					
@@ -271,13 +277,31 @@ window.onload = function() {
 	symbolImg = new Image();
 	symbolImg.src = '../common/symbolSheet.png';
 	symbolImg.style.backgroundColor = 'transparent'; 
+
+	symbolImg.onload = function() {		
+		symbolsLoaded = true;
+		console.log("Symbols loaded...");
+		loaded();
+	};
 	
-	symbolImg.onload = function() {			
+	iconImg = new Image();
+	iconImg.src = '../common/iconSheet.png';
+	iconImg.style.backgroundColor = 'transparent'; 
+
+	iconImg.onload = function() {
+		iconsLoaded = true;
+		console.log("Icons loaded...");
+		loaded();
+	};
+}
+
+function loaded () {
+	if ( symbolsLoaded && iconsLoaded ) {
+		resetShapes();   
 		setInterval(function() {
 			drawEverything(); 
 		}, 1000/framesPerSecond);
-	};
-
+	}
 }
 
 

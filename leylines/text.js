@@ -2,7 +2,7 @@
 
 var helpText = [
 	"Karazhan LeyLine app by TiggerOni.",
-	"v2.0: Updated to more recent map data.",
+	"v2.1: Updated to more recent map data.",
 	"",
 	"These foods are visible in Return to Karazhan if you've talked to Amara Lunastar.",
 	"All nodes represent foods in RtK in their best known spawn locations.",
@@ -27,7 +27,7 @@ var helpText = [
 
 var creditText = [
 	"Karazhan LeyLine food app.",
-	"v2.0",
+	"v2.1",
 	"",
 	"Programmed by TiggerOni",
 	"",
