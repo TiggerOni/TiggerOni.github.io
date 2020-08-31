@@ -34,8 +34,8 @@ var blankItem = { id:0, type:-1, x:0, y:0, startX:0, startY:0, targetX:0, target
 
 var foodItems = [];
 var kibbleItems = [
-		{ id:1000, type:KIBBLES, x:940, y:400, scale:0.75, isMoving:false, canGrab:false, isGrabbed:false},
-		{ id:1001, type:KIBBLES, x:940, y:715, scale:0.75, isMoving:false, canGrab:false, isGrabbed:false}
+		{ id:1000, type:KIBBLES, x:operaXOffset + 140, y:operaYOffset + 380, scale:0.75, isMoving:false, canGrab:false, isGrabbed:false},
+		{ id:1001, type:KIBBLES, x:operaXOffset + 140, y:operaYOffset + 695, scale:0.75, isMoving:false, canGrab:false, isGrabbed:false}
 	];
 
 var placedFloorFood = [];
@@ -43,7 +43,7 @@ var placedExtraFood = [];
 
 var grabbedItem = null;
 
-const framesToRecall = 8;
+const framesToRecall = 12;
 const framesToSnap = 4;
 
 const DUSTY_BUN_FLOOR = DUSTY_BUN * 10;
@@ -88,13 +88,13 @@ function placeFloorFoods() {
 	for (index in foodItems) {
 		var item = foodItems[index];
 		if (item.id == DUSTY_BUN_FLOOR) {
-			item.targetX = 975;
-			item.targetY = 790;
+			item.targetX = operaXOffset + 175;
+			item.targetY = operaYOffset + 770;
 			setupMove(item, framesToRecall);
 			shapes[DUSTY_BUN].active = true;
 		} else if (item.id == KARAWEIZEN_FLOOR) {
-			item.targetX = 1380;
-			item.targetY = 750;
+			item.targetX = operaXOffset + 580;
+			item.targetY = operaYOffset + 730;
 			setupMove(item, framesToRecall);
 			shapes[KARAWEIZEN].active = true;
 		}
@@ -135,6 +135,11 @@ function setupMove(item, frames) {
 	if (item.x != item.targetX || item.y != item.targetY) {
 		item.dx = (item.targetX - item.x) / frames;
 		item.dy = (item.targetY - item.y) / frames;
+		
+		if (Math.abs(item.dx) < 2 )
+			item.dx = 0;
+		if (Math.abs(item.dy) < 2 )
+			item.dy = 0;
 		item.isMoving = true;
 	}
 }
@@ -149,6 +154,7 @@ function updateItems() {
 			} else {
 				item.dx = 0;
 			}
+			
 			if ( item.dy != 0 && Math.abs(item.y - item.targetY) > Math.abs(item.dy)) {
 				item.y += item.dy;
 			} else {
@@ -194,8 +200,10 @@ function drawFloorItems() {
 	
 	for (var i=0; i<foodItems.length; i++) {
 		drawItem(foodItems[i]);
-	}	
-	
+	}		
+}
+
+function drawKibbles() {
 	drawItem(kibbleItems[0]);
 	drawItem(kibbleItems[1]);
 }
@@ -276,23 +284,27 @@ function updateGrab(mx, my) {
 
 function dropItem() {
 	if (grabbedItem) {
-		grabbedItem.isGrabbed = false;
+		var item = grabbedItem;
+		grabbedItem = null;		
+		
+		item.isGrabbed = false;
+		
+		if (item.x < 0) item.x = 0;
+		if (item.y < 0) item.y = 0;
 		
 		// Do shift to grid or return to start here, depending on where dropped.
-		if (grabbedItem.x < operaXOffset) {
-			recallFood(grabbedItem);
+		if (item.x < operaXOffset) {
+			recallFood(item);
 		} else {
-			shapes[grabbedItem.type].active = true;		// Should make an API for this...
+			shapes[item.type].active = true;		// Should make an API for this...
 			
 			if (snapToGrid) {
-				var points = getNearestGridPoint(grabbedItem.x,grabbedItem.y);						
-				grabbedItem.targetX = points[0];
-				grabbedItem.targetY = points[1];						
-				setupMove(grabbedItem, framesToSnap);
+				var points = getNearestGridPoint(item.x,item.y);						
+				item.targetX = points[0];
+				item.targetY = points[1];						
+				setupMove(item, framesToSnap);
 			}
-		}
-		
-		grabbedItem = null;		
+		}		
 	}
 	canvas.removeEventListener('mouseup', dropItem);
 	

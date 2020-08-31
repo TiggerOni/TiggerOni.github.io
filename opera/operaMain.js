@@ -17,10 +17,6 @@ var iconImg;
 var framesPerSecond = 30;
 
 
-const operaXOffset = 800;
-const operaYOffset = 20;
-
-
 
 // Options:
 
@@ -33,28 +29,42 @@ var showingHelp = true;
 var snapToGrid = true;
 var recallAllFoods = false;
 var placeExistingFoods = true;
+
+const ART_FLOOR = 0;
+const ART_SKETCH = 1;
+const ART_GRAPH = 2;
+const ART_NONE = 3;
+
+var showArt = ART_FLOOR;
+
 var showSketch = true;
+var showGraphPaper = false;
 
 var showGrid = false;
+var showGridDots = false;
+
+var showKibbles = true;
 
 
 // For drag and drop foods on the board
 var grabbedItem = null;
 
 const SHOWING_ICONS = 0;
-const SHOW_FLOOR_SKETCH = 1;
-const SNAP_TO_GRID = 2;
-const SHOWING_GRID = 3;
-const PLACE_EXISTING_FOODS = 4;
-const RECALL_ALL_FOODS = 5;
-const SHOWING_HELP = 6;
-const SHOWING_CREDITS = 7;
+const SNAP_TO_GRID = 1;
+const SHOWING_GRID = 2;
+const SHOWING_GRID_DOTS = 3;
+const SHOWING_KIBBLES = 4;
+const PLACE_EXISTING_FOODS = 5;
+const RECALL_ALL_FOODS = 6;
+const SHOWING_HELP = 7;
+const SHOWING_CREDITS = 8;
 
 var optionList = [
 	{ text:"Show Icons/Shapes", value: true, default: true },
-	{ text:"Show Sketch/Image", value: true, default: true },
 	{ text:"Snap to Grid", value: true, default: true },
-	{ text:"Show Grid", value: false, default: false },
+	{ text:"Show Grid", value: true, default: true },
+	{ text:"Show Grid Dots", value: false, default: false },
+	{ text:"Show Kibbles", value: true, default: true },
 	{ text:"Place Existing", value: false, default: false },
 	{ text:"Recall all foods", value: false, default: false },
 	{ text:"Show Help", value: true, default: false },
@@ -63,15 +73,15 @@ var optionList = [
 
 function updateOptions() {
 	showIcons = optionList[SHOWING_ICONS].value;
-	
-	showSketch = optionList[SHOW_FLOOR_SKETCH].value;
-	
+		
 	showingCredits = optionList[SHOWING_CREDITS].value;
 	showingHelp = optionList[SHOWING_HELP].value;
 	
 	snapToGrid = optionList[SNAP_TO_GRID].value;
 	showGrid = optionList[SHOWING_GRID].value;
+	showGridDots = optionList[SHOWING_GRID_DOTS].value;
 		
+	showKibbles = optionList[SHOWING_KIBBLES].value;
 	
 	if (!placeExistingFoods && optionList[PLACE_EXISTING_FOODS].value) {
 		placeFloorFoods();
@@ -132,18 +142,8 @@ function keyPressed(evt) {
 		recallingAllFoods();
 		resetOptions();
 		updateOptions();
-	} else if (evt.keyCode == 32 || evt.keyCode == 76) {	// space or l
-		makeLine();
-	} else if (evt.keyCode == 83) {		// s 
-		swapSelectedItems();		
-	} 
-	else if (evt.keyCode == 80) { 	// p 
-		placeFloorFoods();	
-	}	
-	else if (evt.keyCode == 71) { 	// g
-		showGrid = !showGrid;
-		optionList[SHOWING_GRID].value = showGrid;	
-	}	
+	}
+
 	else {
 		// console.log ('keypress : ' + evt.keyCode + ' detected');
 	}
@@ -182,7 +182,8 @@ function testFoodUI(mx, my, shiftKey){
 function testUIClick(mx, my, shiftKey) {
 
 	if (testFoodUI(mx, my, shiftKey)
-            || testOptionsUI(mx, my)) {
+            || testOptionsUI(mx, my) 
+			|| testActions(mx, my)) {
 		return true;
 	}
 
@@ -193,7 +194,9 @@ function testUIClick(mx, my, shiftKey) {
 
 function cursorOnClickableElement(x, y) {
     return getFoodUI(x, y) != null
-        || getOptionsUI(x, y) != null;        
+        || getOptionsUI(x, y) != null
+		|| getActions(x, y) != null
+		|| checkGridToggle(x, y, true);        
 }
 
 function cursorOnGrabbableElement(x,y) {
@@ -266,9 +269,12 @@ function clickMouse(evt) {
 		optionList[SHOWING_HELP].value = false;
 		return;
 	}
+	
 
 	if (testUIClick(mouseX, mouseY, evt.shiftKey)) {
 		updateOptions();
+	} else if (checkGridToggle(mouseX, mouseY, false)) {
+		// no need to do anything here...
 	} else {
 		if (tryItemClick(mouseX, mouseY, evt.shiftKey)) {
 			changeCursor(GRAB);
@@ -287,6 +293,7 @@ var screenLoaded = false;
 
 var operaSketchImg;
 var operaScreenImg;
+var operaGridPaperImg;
 
 window.onload = function() {
 	canvas = document.getElementById('gameCanvas');	
@@ -336,7 +343,7 @@ window.onload = function() {
 	};
 
 	operaSketchImg = new Image();
-	operaSketchImg.src = 'opera-sketch.jpg';
+	operaSketchImg.src = 'art/opera-sketch.jpg';
 	operaSketchImg.style.backgroundColor = 'transparent'; 
 
 	operaSketchImg.onload = function() {
@@ -346,12 +353,22 @@ window.onload = function() {
 	};
 	
 	operaScreenImg = new Image();
-	operaScreenImg.src = 'opera-fine.jpg';
+	operaScreenImg.src = 'art/opera-fine.jpg';
 	operaScreenImg.style.backgroundColor = 'transparent'; 
 
 	operaScreenImg.onload = function() {
 		screenLoaded = true;
 		console.log("Screen loaded...");
+		loaded();
+	};	
+	
+	operaGridPaperImg = new Image();
+	operaGridPaperImg.src = 'art/gridPaperSm.jpg';
+	operaGridPaperImg.style.backgroundColor = 'white'; 
+
+	operaGridPaperImg.onload = function() {
+		screenLoaded = true;
+		console.log("Grid Paper loaded...");
 		loaded();
 	};	
 }
@@ -382,7 +399,7 @@ function initOperaData () {
 
 	makeFoodItems();
 	
-	initGrid(25, 24, operaXOffset+19, operaYOffset+17, 40.1, 40.2);
+	initGrid(25, 25, operaXOffset+19, operaYOffset+17, 40.1, 40.2);
 	
 	console.log("opera data initialized");
 }
@@ -400,7 +417,6 @@ function resetCanvas() {
 
 	canvas.height = window.innerHeight;
 	canvas.width = canvas.height * appRatio;
-//	canvas.width = window.innerWidth;
 	
 	appScale = canvas.height / appHeight;
 
@@ -413,6 +429,112 @@ function resetCanvas() {
 function normalize() {
 	// todo: resize or move everything to fit in the new client area.
 }
+
+
+
+var searchX = 375;
+var searchY = 800;
+
+// 	grid, map, sketch toggle + 
+function drawActions() {
+
+	var x = searchX;
+	var y = searchY;
+	var textXOffset = shapeWidth / 2;
+	var textYOffset = legendItemHeight/2;
+	var buttonSize = legendItemHeight;
+
+	canvasContext.font = legendFont;
+	canvasContext.textBaseline = 'middle';
+	canvasContext.textAlign = 'left';
+
+
+	if (showArt == 0) {
+		highlight(x, y, legendItemWidth, legendItemHeight);
+	} else {
+		border(x, y, legendItemWidth, legendItemHeight);
+	}
+	canvasContext.fillText("Show Opera Floor", x + textXOffset, y + textYOffset);
+	y += legendItemHeight;
+
+	if (showArt == 1) {
+		highlight(x, y, legendItemWidth, legendItemHeight);
+	} else {
+		border(x, y, legendItemWidth, legendItemHeight);
+	}
+	canvasContext.fillText("Show Opera Sketch", x + textXOffset, y + textYOffset);
+	y += legendItemHeight;
+	
+	if (showArt == 2) {
+		highlight(x, y, legendItemWidth, legendItemHeight);
+	} else {
+		border(x, y, legendItemWidth, legendItemHeight);
+	}
+	canvasContext.fillText("Show Graph Paper", x + textXOffset, y + textYOffset);
+	y += legendItemHeight;
+	
+	if (showArt == 3) {
+		highlight(x, y, legendItemWidth, legendItemHeight);
+	} else {
+		border(x, y, legendItemWidth, legendItemHeight);
+	}
+	canvasContext.fillText("Show Blank Area", x + textXOffset, y + textYOffset);
+	y += legendItemHeight;
+	
+	
+	canvasContext.textAlign = 'left';
+}
+
+
+function getActions(mx, my) {
+    var x = searchX;
+	var y = searchY;
+
+	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
+		return "Floor";
+	}
+	y += legendItemHeight;
+	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
+		return "Sketch";
+	}
+	y += legendItemHeight;
+	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
+		return "GraphPaper";
+	}
+	y += legendItemHeight;
+	if (mx >= x && mx <= x + legendItemWidth && my >= y && my <= y + legendItemHeight) {
+		return "Blank";
+	}
+
+	//y += legendItemHeight * 2;
+
+	return null;
+}
+
+
+function testActions(mx, my) {
+    var action = getActions(mx, my)
+	if (action) {
+        switch(action){
+            case "Floor":
+                showArt = ART_FLOOR;
+                return true;
+            case "Sketch":
+                showArt = ART_SKETCH;
+                return true;
+            case "GraphPaper":
+                showArt = ART_GRAPH;
+                return true;
+			case "Blank":
+				showArt = ART_NONE;
+				break;
+        }
+	}
+	return false;
+}
+
+
+
 
 
 // base size is 36x36;
@@ -435,15 +557,15 @@ function drawSprite (id, scale, x, y) {
 
 function drawOperaFloor () {
 
-	if (showSketch) {
-		canvasContext.drawImage(operaSketchImg, operaXOffset+15, operaYOffset+13);
-	} else {
-		canvasContext.drawImage(operaScreenImg, operaXOffset+16, operaYOffset+25);
+	if (showArt == ART_GRAPH) {
+		canvasContext.drawImage(operaGridPaperImg, operaXOffset+16, operaYOffset+13);
+	} else if (showArt == ART_SKETCH) {
+		canvasContext.drawImage(operaSketchImg, operaXOffset+13, operaYOffset+13);
+	} else if (showArt == ART_FLOOR) {
+		canvasContext.drawImage(operaScreenImg, operaXOffset+18, operaYOffset+20);
 	}		
-	
-	if (showGrid) {
-		drawGrid();		
-	}
+		
+	drawGrid(showGrid, showGridDots);		
 }
 
 	
@@ -470,6 +592,7 @@ function drawEverything() {
 	}
 
 	drawLegend();
+	drawActions();
 	
 	if (showingHelp) {
 		showTextPanel(helpText);
@@ -481,5 +604,8 @@ function drawEverything() {
 		updateItems();		
 		drawOperaFloor();
 		drawFloorItems();
+		
+		if (showKibbles)
+			drawKibbles();
 	}		
 }

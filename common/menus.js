@@ -30,28 +30,6 @@ var actionsX = 375;
 var actionsY = 400;
 
 
-function highlight(x, y, w, h) {
-
-	canvasContext.fillStyle = "gray";	
-	canvasContext.fillRect(x, y, w, h);
-	
-	canvasContext.beginPath();
-	canvasContext.strokeStyle = "white";
-	canvasContext.lineWidth = 1;
-	canvasContext.rect(x, y, w, h);
-	canvasContext.stroke();
-
-	canvasContext.fillStyle = "white";		
-}
-
-function border(x, y, w, h) {
-	
-	canvasContext.beginPath();
-	canvasContext.strokeStyle = "gray";
-	canvasContext.lineWidth = 1;
-	canvasContext.rect(x, y, w, h);
-	canvasContext.stroke();
-}
 
 function drawFoodLegend() {
 	if (!showFoodLegend) {

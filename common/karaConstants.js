@@ -23,6 +23,10 @@ var appHeight = 1100;
 var appRatio = (appWidth/appHeight);
 
 
+const operaXOffset = 775; 	// 800;
+const operaYOffset = 25;	// 20;
+
+
 // ItemIDs
 // Note: same order as symbolSheet.png
 const YEASTY_HUNK = 0;
