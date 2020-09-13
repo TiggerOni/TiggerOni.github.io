@@ -60,6 +60,26 @@ var gridGadgetSize = 10;
 var halfGadgetSize = gridGadgetSize/2;
 
 
+function clearGridLines() {
+	for (var i=0; i<gridCols; i++) {
+		verticalLines[i] = 0;
+	}
+	
+		
+	for (var i=0; i<gridRows; i++) {
+		horizontalLines[i] = 0;
+	}	
+}
+
+function turnOnGridLine(x, y) {
+	if (x >= 0 && x < gridCols) {		
+		verticalLines[x] = 1;
+	}
+	if (y >= 0 && y < gridRows) {		
+		horizontalLines[y] = 1;
+	}
+}
+
 // used for toggling lines on the grid on and off.
 function checkGridToggle(mx, my, testOnly) {	
 	var x, y;
@@ -108,6 +128,10 @@ function getNearestGridPoint(mx, my) {
 	var row = Math.round(my / gridRowSize);
 	
 	return [gridX + (col*gridColSize), gridY + (row*gridRowSize)];
+}
+
+function getLocationForGridPoint( gLoc ) {
+	return { x: (gLoc.gx * gridColSize) + gridX, y: (gLoc.gy * gridRowSize) + gridY};
 }
 
 function drawGridLines() {

@@ -49,6 +49,30 @@ const framesToSnap = 4;
 const DUSTY_BUN_FLOOR = DUSTY_BUN * 10;
 const KARAWEIZEN_FLOOR = KARAWEIZEN * 10;
 
+
+var solutionItems = [ 
+	JUICY_DRUMSTICK * 10,
+	MARBLED_STEAK * 10,
+	FISHY_BITS * 10,
+	MEATY_MORSEL * 10,
+	MARBLED_STEAK * 10 + 1,
+	SLATHERED_RIB * 10,
+	JUICY_DRUMSTICK * 10 + 1,
+	FISHY_BITS * 10 + 1
+];
+
+var solutionLocs = [
+	{ gx: 5, gy: 21 }, 
+	{ gx: 7, gy: 19 }, 
+	{ gx: 9, gy: 17 }, 
+	{ gx: 11, gy: 15 }, 
+	{ gx: 13, gy: 13 }, 
+	{ gx: 15, gy: 7 }, 
+	{ gx: 17, gy: 5 }, 
+	{ gx: 19, gy: 7 }, 	
+];
+
+
 function makeFoodItems() {
 	var halfHeight = legendItemHeight/2;
 	var iconSpace = 30;
@@ -98,8 +122,39 @@ function placeFloorFoods() {
 			setupMove(item, framesToRecall);
 			shapes[KARAWEIZEN].active = true;
 		}
-	}
+	}		
+}
+
+function placeSolution() {
+	recallingAllFoods();
+	clearGridLines();
+	
+	turnOnGridLine(4, 4);
+	turnOnGridLine(20, 22);
+	
+	
+	for (index in solutionItems) {
+		var item = getItemByID(solutionItems[index]);
+
+		if (item) {
+			var loc = getLocationForGridPoint( solutionLocs[index] );
+			item.targetX = loc.x;
+			item.targetY = loc.y;
 		
+			setupMove(item, framesToRecall);
+		}		
+	}
+}
+
+function getItemByID (id) {
+	for (i in foodItems) {
+		var item = foodItems[i];
+		if (item.id == id) {
+			return item;
+		}
+	}
+	
+	return null;
 }
 
 function recallingAllFoods() {
@@ -167,9 +222,9 @@ function updateItems() {
 				
 				if (item.id == DUSTY_BUN_FLOOR| item.id == KARAWEIZEN_FLOOR) {
 					turnOffPlaceButton();
-				}
+				}				
 				
-				if (recallAllFoods) {
+				if (recallAllFoods || putDownSolution) {
 					turnOffRecallButton();
 				}
 			}

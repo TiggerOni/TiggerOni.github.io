@@ -29,6 +29,7 @@ var showingHelp = true;
 var snapToGrid = true;
 var recallAllFoods = false;
 var placeExistingFoods = true;
+var putDownSolution = true;
 
 const ART_FLOOR = 0;
 const ART_SKETCH = 1;
@@ -49,17 +50,19 @@ var showKibbles = true;
 // For drag and drop foods on the board
 var grabbedItem = null;
 
-const SHOWING_ICONS = 0;
-const SNAP_TO_GRID = 1;
-const SHOWING_GRID = 2;
-const SHOWING_GRID_DOTS = 3;
-const SHOWING_KIBBLES = 4;
-const PLACE_EXISTING_FOODS = 5;
-const RECALL_ALL_FOODS = 6;
-const SHOWING_HELP = 7;
-const SHOWING_CREDITS = 8;
+const PLACE_SOLUTION = 0;
+const SHOWING_ICONS = 1;
+const SNAP_TO_GRID = 2;
+const SHOWING_GRID = 3;
+const SHOWING_GRID_DOTS = 4;
+const SHOWING_KIBBLES = 5;
+const PLACE_EXISTING_FOODS = 6;
+const RECALL_ALL_FOODS = 7;
+const SHOWING_HELP = 8;
+const SHOWING_CREDITS = 9;
 
 var optionList = [
+	{ text:"PLACE SOLUTION", value: false, default: false },
 	{ text:"Show Icons/Shapes", value: true, default: true },
 	{ text:"Snap to Grid", value: true, default: true },
 	{ text:"Show Grid", value: true, default: true },
@@ -88,6 +91,11 @@ function updateOptions() {
 	}	
 	placeExistingFoods = optionList[PLACE_EXISTING_FOODS].value;
 	
+	if (!putDownSolution && optionList[PLACE_SOLUTION].value) {
+		placeSolution();
+	}	
+	putDownSolution = optionList[PLACE_SOLUTION].value;
+	
 	if (!recallAllFoods && optionList[RECALL_ALL_FOODS].value) {
 		recallingAllFoods();
 	}
@@ -100,13 +108,21 @@ function turnOffPlaceButton() {
 		optionList[PLACE_EXISTING_FOODS].value = false;
 		updateOptions();
 	}
+	
+	if (putDownSolution) {
+		optionList[PLACE_SOLUTION].value = false;
+		updateOptions();
+	}
 }
 
 function turnOffRecallButton() {
 	if (recallAllFoods) {
 		optionList[RECALL_ALL_FOODS].value = false;
 		updateOptions();
-
+	}
+	if (putDownSolution) {
+		optionList[PLACE_SOLUTION].value = false;
+		updateOptions();
 	}
 }
 
@@ -140,6 +156,12 @@ function keyPressed(evt) {
 	
 	if (evt.keyCode == 82) {	// r
 		recallingAllFoods();
+		resetOptions();
+		updateOptions();
+	}
+	
+	if (evt.keyCode == 83) {	// s
+		placeSolution();
 		resetOptions();
 		updateOptions();
 	}

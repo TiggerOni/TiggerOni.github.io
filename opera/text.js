@@ -6,7 +6,9 @@ var tipsText = [
 
 var helpText = [
 	"Interactive Karazhan Opera Hall app by TiggerOni.",
-	"v2.0",
+	"v3.0",
+	"",
+	"Congrats to PaulyTark for figuring out the solution!",
 	"",
 	"These foods are visible in Return to Karazhan if you've talked to Amara Lunastar.",
 	"",
@@ -29,7 +31,7 @@ var creditText = [
 	"",
 	"Part of the WoW secrets Jenefur discord group.",	
 	"",
-	"Special thanks to:  Llanthta, Remte and Super.",
+	"Special thanks to:  Llanthta, Remte, Raere, Spike and Super.",
 	"",
 	"Any key press closes these credits."
 ];
